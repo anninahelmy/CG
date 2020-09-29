@@ -1,0 +1,2 @@
+/Library/Developer/CommandLineTools/usr/bin/ar qc libcommon.a  CMakeFiles/common.dir/Cylinder.cpp.o CMakeFiles/common.dir/Mesh.cpp.o CMakeFiles/common.dir/Plane.cpp.o CMakeFiles/common.dir/Scene.cpp.o CMakeFiles/common.dir/Sphere.cpp.o CMakeFiles/common.dir/vec3.cpp.o
+/Library/Developer/CommandLineTools/usr/bin/ranlib libcommon.a

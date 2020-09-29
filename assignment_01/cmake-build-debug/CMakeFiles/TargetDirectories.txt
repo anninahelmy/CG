@@ -1,0 +1,7 @@
+/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/src/CMakeFiles/rebuild_cache.dir
+/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/src/CMakeFiles/edit_cache.dir
+/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/src/CMakeFiles/debug_aabb.dir
+/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/src/CMakeFiles/raytrace.dir
+/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/src/CMakeFiles/common.dir

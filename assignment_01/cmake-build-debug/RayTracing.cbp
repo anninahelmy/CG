@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="RayTracing"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\src\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="debug_aabb">
+				<Option output="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/debug_aabb" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 debug_aabb"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="debug_aabb/fast">
+				<Option output="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/debug_aabb" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 debug_aabb/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="raytrace">
+				<Option output="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/raytrace" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 raytrace"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="raytrace/fast">
+				<Option output="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/raytrace" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 raytrace/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="common">
+				<Option output="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/src/libcommon.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/src"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 common"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="common/fast">
+				<Option output="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/src/libcommon.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/cmake-build-debug/src"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 common/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/annina/Documents/UNI\ BERN/7.\ Semester/CG/assignment_01/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/Cylinder.cpp">
+			<Option target="common"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/Cylinder.h">
+			<Option target="common"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/Mesh.cpp">
+			<Option target="common"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/Mesh.h">
+			<Option target="common"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/Plane.cpp">
+			<Option target="common"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/Plane.h">
+			<Option target="common"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/Scene.cpp">
+			<Option target="common"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/Scene.h">
+			<Option target="common"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/Sphere.cpp">
+			<Option target="common"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/Sphere.h">
+			<Option target="common"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/debug_aabb.cpp">
+			<Option target="debug_aabb"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/raytrace.cpp">
+			<Option target="raytrace"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/vec3.cpp">
+			<Option target="common"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/vec3.h">
+			<Option target="common"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/Users/annina/Documents/UNI BERN/7. Semester/CG/assignment_01/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
