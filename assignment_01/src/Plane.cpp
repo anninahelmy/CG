@@ -20,7 +20,7 @@
 
 
 Plane::Plane(const vec3& _center, const vec3& _normal)
-: center(_center), normal(_normal)
+        : center(_center), normal(_normal)
 {
 }
 
@@ -36,21 +36,24 @@ intersect(const Ray& _ray,
           double&    _intersection_t ) const
 {
 
+
     const vec3 &dir = _ray.direction;
     const vec3 oc = _ray.origin;
 
     _intersection_t = NO_INTERSECTION;
 
 
-    if (dot(&dir, normal) == 0) return false;
+    if (dot(dir, normal) == 0)
+        return false;
     else {
-        _intersection_t = (center - dot(normal, oc))/(dot(normal, dir));
+        _intersection_t = (dot(normal, center-oc))/(dot(normal, dir));
         if (_intersection_t<0){
             _intersection_t = NO_INTERSECTION;
         }
     }
 
-    if(_intersection_t == NO_INTERSECTION) return false;
+    if(_intersection_t == NO_INTERSECTION)
+        return false;
 
     _intersection_point = _ray(_intersection_t);
     _intersection_normal = normal;
