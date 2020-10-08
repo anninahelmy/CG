@@ -58,7 +58,7 @@ Image Scene::render()
     // OpenMP parallelization, e.g. via MacPorts.
 
 #ifdef _OPENMP
-    std::cout << "Rendering with up to " << omp_get_max_threads() << " threads." << std::endl;
+    std::cout << "Rendering with " << omp_get_num_threads() << " threads." << std::endl;
 #  pragma omp parallel for
 #else
     std::cout << "Rendering singlethreaded." << std::endl;
@@ -91,7 +91,16 @@ vec3 Scene::trace(const Ray& _ray, int _depth)
     // compute local Phong lighting (ambient+diffuse+specular)
     vec3 color = lighting(point, normal, -_ray.direction, object->material);
 
-
+    /** \todo
+     * Compute reflections by recursive ray tracing:
+     * - generate reflected ray, compute its color contribution, and mix it with
+     * the color computed by local Phong lighting (use `object->material.mirror` as weight)
+     * - check whether your recursive algorithm reflects the ray `max_depth` times
+     */
+    // - check whether `object` is reflective by checking its `material.mirror` and checking recursion depth
+    if(_depth<max_depth&&object->material.mirror>0.0){
+        //generate reflected ray
+    }
 
     return color;
 }
@@ -122,12 +131,51 @@ bool Scene::intersect(const Ray& _ray, Object_ptr& _object, vec3& _point, vec3& 
 }
 
 vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view, const Material& _material)
-{
+{   /** \todo
+     * Compute the Phong lighting:
+     * - start with global ambient contribution
+    **/
+    vec3 light_color = _material.ambient * ambience; //ambient light color: (material ambient refelction coefficient)*(ambient light intensity for scene)
 
-    // visualize the normal as a RGB color for now.
-    vec3 color = (_normal + vec3(1)) / 2.0;
+    //for each (add for loop!) light source (vec lights) add diffuse and specular contribution
 
-    return color;
+    for(const Light& _light:lights){
+        vec3 l_direction = normalize(_light.position - _point);
+
+        //check whether object is in shadow
+        //shadow ray from intersection point to light source;
+        // discard diffuse and specular contribution if light source is blocked by another object
+        Ray shadow = (_point, l_direction);
+        //discard secondary intersection points that are too close to the light source
+        Object_ptr  object;
+        vec3        point;
+        vec3        normal;
+        double      t;
+        double l_distance = distance(_point, _light.position);
+        if (t < l_distance && intersect(shadow, object, point, normal, t)){
+            continue;}
+        /*diffusion: I_l*m_d(n\dot l)where
+         * I_l is the intensity of light source,
+         * m_d is materials diffuse reflection coefficient.
+         * light direction l and normalized vector n
+         **/
+        if (dot(l_direction, _normal) > 0.0) { //add if statement, if n*l<0 then the light source is behind the plane (siehe Vorlesung)
+            light_color = light_color + _material.diffuse * _light.color * dot(l_direction, _normal);
+            /**need to add specular light: I_l*m_s(r\dotv) with
+             * I_l is the intensity of light source,
+             * m_s the materials specular reflection coefficient
+             * r reflected ray = 2n(n\dot l) - l
+             * v refracted ray
+             */
+            vec3 reflected_ray = normalize(2 * _normal * (dot(_normal, l_direction)) - l_direction);
+            vec3 refracted_ray = normalize(mirror(l_direction, _normal));
+            if(dot(reflected_ray, refracted_ray) > 0.0) {//siehe Vorlesung, wenn kleiner als 0 wäre, dann würde man von der anderen Seite auf Ebene schauen{
+                light_color = light_color + _light.color * _material.specular *
+                                            pow(dot(reflected_ray, refracted_ray), _material.shininess);
+            }
+        }
+    }
+    return light_color;
 }
 
 //-----------------------------------------------------------------------------
@@ -139,15 +187,15 @@ void Scene::read(const std::string &_filename)
         throw std::runtime_error("Cannot open file " + _filename);
 
     const std::map<std::string, std::function<void(void)>> entityParser = {
-        {"depth",      [&]() { ifs >> max_depth; }},
-        {"camera",     [&]() { ifs >> camera; }},
-        {"background", [&]() { ifs >> background; }},
-        {"ambience",   [&]() { ifs >> ambience; }},
-        {"light",      [&]() { lights .emplace_back(ifs); }},
-        {"plane",      [&]() { objects.emplace_back(new    Plane(ifs)); }},
-        {"sphere",     [&]() { objects.emplace_back(new   Sphere(ifs)); }},
-        {"cylinder",   [&]() { objects.emplace_back(new Cylinder(ifs)); }},
-        {"mesh",       [&]() { objects.emplace_back(new     Mesh(ifs, _filename)); }}
+            {"depth",      [&]() { ifs >> max_depth; }},
+            {"camera",     [&]() { ifs >> camera; }},
+            {"background", [&]() { ifs >> background; }},
+            {"ambience",   [&]() { ifs >> ambience; }},
+            {"light",      [&]() { lights .emplace_back(ifs); }},
+            {"plane",      [&]() { objects.emplace_back(new    Plane(ifs)); }},
+            {"sphere",     [&]() { objects.emplace_back(new   Sphere(ifs)); }},
+            {"cylinder",   [&]() { objects.emplace_back(new Cylinder(ifs)); }},
+            {"mesh",       [&]() { objects.emplace_back(new     Mesh(ifs, _filename)); }}
     };
 
     // parse file
