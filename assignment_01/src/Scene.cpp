@@ -145,7 +145,7 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
         //check whether object is in shadow
         //shadow ray from intersection point to light source;
         // discard diffuse and specular contribution if light source is blocked by another object
-        Ray shadow = (_point, l_direction);
+        Ray shadow(_point, l_direction);
         //discard secondary intersection points that are too close to the light source
         Object_ptr  object;
         vec3        point;
@@ -154,6 +154,7 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
         double l_distance = distance(_point, _light.position);
         if (t < l_distance && intersect(shadow, object, point, normal, t)){
             continue;}
+
         /*diffusion: I_l*m_d(n\dot l)where
          * I_l is the intensity of light source,
          * m_d is materials diffuse reflection coefficient.
@@ -161,6 +162,7 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
          **/
         if (dot(l_direction, _normal) > 0.0) { //add if statement, if n*l<0 then the light source is behind the plane (siehe Vorlesung)
             light_color = light_color + _material.diffuse * _light.color * dot(l_direction, _normal);
+
             /**need to add specular light: I_l*m_s(r\dotv) with
              * I_l is the intensity of light source,
              * m_s the materials specular reflection coefficient
