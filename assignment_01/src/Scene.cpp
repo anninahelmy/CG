@@ -161,13 +161,12 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
         vec3 point;
         vec3 normal;
         double t;
-        //discard secondary intersection points that are too close to the light source //
+
         double l_distance = distance(_point, light.position);
         if (!intersect(shadow, object, point, normal, t) && (t < l_distance)) {
-
             //check if light comes from right direction.
-            double x = dot(l_direction, _normal);
-            if (x > 0.0) {
+
+            if (dot(l_direction, _normal) > 0.0) {
                 /**
                 * diffusion: I_l*m_d(n\dot l)where
                 * I_l is the intensity of light source,
@@ -175,22 +174,19 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
                 * light direction l and normalized vector n
                 **/
                 vec3 lightcolor = light.color;
-                diffuseLight += lightcolor * x * _material.diffuse;
+                diffuseLight += lightcolor * dot(l_direction, _normal) * _material.diffuse;
                 /**
                  * specular reflection: I_l*m_s(r\dotv)^s with
                  * I_l is the intensity of light source,
                  * m_s the materials specular reflection coefficient
-                 * r reflected ray = 2n(n\dot l) - l
+                 * r reflected ray
                  * v refracted ray
                  * s material shininess
                  */
-                //vec3 _view = normalize(2 * _normal * (dot(_normal, l_direction)) - l_direction);
                 vec3 reflected_ray = normalize(mirror(l_direction, _normal));
-                double y = dot(_view, reflected_ray);
-                if (y > 0.0) {
+                if ( dot(_view, reflected_ray) > 0.0) {
                     //siehe Vorlesung, wenn kleiner als 0 wäre, dann würde man von der anderen Seite auf Ebene schauen
-                    specularLight +=
-                            (_material.specular * light.color) * pow(dot(reflected_ray, _view), _material.shininess);
+                    specularLight = specularLight + (_material.specular * light.color) * pow(dot(reflected_ray, _view), _material.shininess);
                 }
             }
 
