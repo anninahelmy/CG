@@ -28,9 +28,9 @@ Mesh::Mesh(std::istream &is, const std::string &scenePath)
 
     const char pathSep =
 #ifdef _WIN32
-                            '\\';
+            '\\';
 #else
-                            '/';
+            '/';
 #endif
 
     // load mesh from file
@@ -151,6 +151,31 @@ void Mesh::compute_normals()
         v.normal = vec3(0,0,0);
     }
 
+    /** \todo
+     * In some scenes (e.g the office scene) some objects should be flat
+     * shaded (e.g. the desk) while other objects should be Phong shaded to appear
+     * realistic (e.g. chairs). You have to implement the following:
+     * - Compute vertex normals by averaging the normals of their incident triangles.
+     * - Store the vertex normals in the Vertex::normal member variable.
+     * - Weigh the normals by their triangles' angles.
+     */
+
+    // we need to find all incident triangles for every vertex ->very inefficient brute force algorithm
+    // in order of efficiency we iterate over all triangle
+    for (Triangle& t: triangles_){
+        //find angles/weight for every vertex in triangle
+        double w0, w1, w2;
+        angleWeights(vertices_[t.i0].position, vertices_[t.i1].position, vertices_[t.i2].position, w0, w1, w2);
+        // add for every vertex of the triangle the weighted normal of the triangle to the vertex normal
+        vertices_[t.i0].normal += t.normal*w0;
+        vertices_[t.i1].normal += t.normal*w1;
+        vertices_[t.i2].normal += t.normal*w2;
+    }
+
+    // iterate over all vertex normals and normalize them
+    for(Vertex& v: vertices_){
+        v.normal = normalize(v.normal);
+    }
 }
 
 
@@ -176,8 +201,68 @@ void Mesh::compute_bounding_box()
 bool Mesh::intersect_bounding_box(const Ray& _ray) const
 {
 
+    /** \todo
+    * Intersect the ray `_ray` with the axis-aligned bounding box of the mesh.
+    * Note that the minimum and maximum point of the bounding box are stored
+    * in the member variables `bb_min_` and `bb_max_`. Return whether the ray
+    * intersects the bounding box.
+    * This function is ued in `Mesh::intersect()` to avoid the intersection test
+    * with all triangles of every mesh in the scene. The bounding boxes are computed
+    * in `Mesh::compute_bounding_box()`.
+    */
 
-    return true;
+    // since we are working with axis aligned bounding boxes we know the direction of our bounding boxes.
+    // our box has 6 planes
+    float t;
+    vec3 n1,n2,n3, intersection;
+    n1 = vec3(1,0,0);
+    n2 = vec3(0,1,0);
+    n3 = vec3(0,0,1);
+    // discard obvious rays that don't intersect
+    if(dot(_ray.direction, n1)==0 || dot(_ray.direction, n2)==0 || dot(_ray.direction, n3)==0){
+        return false;
+    }
+    // check if ray intersect plane: t = (dot(n1, bb_min_-_ray.origin))/(dot(n1, _ray.direction));
+    // check which planes of the box need to be checked for intersection
+    // if there is an intersection and t is between min and max then the ray intersect with the bounding box.
+    //TODO richtig grusig coded, es git sicher en eleganteri lösig...
+    if (_ray.origin[0]<bb_min_[0]){
+        t = (dot(n1, bb_min_-_ray.origin))/(dot(n1, _ray.direction));
+        intersection = _ray(t);
+        if(intersection[1]>bb_min_[1] && intersection[1]<bb_max_[1] &&
+           intersection[2]>bb_min_[2] && intersection[2]<bb_max_[2] && t>0) return true;
+    } else {
+        t = (dot(n1, bb_max_-_ray.origin))/(dot(n1, _ray.direction));
+        intersection = _ray(t);
+        if(intersection[1]>bb_min_[1] && intersection[1]<bb_max_[1] &&
+           intersection[2]>bb_min_[2] && intersection[2]<bb_max_[2] && t>0) return true;
+    }
+
+    if (_ray.origin[1]<bb_min_[1]){
+        t = (dot(n1, bb_min_-_ray.origin))/(dot(n1, _ray.direction));
+        intersection = _ray(t);
+        if(intersection[0]>bb_min_[0] && intersection[0]<bb_max_[0] &&
+           intersection[2]>bb_min_[2] && intersection[2]<bb_max_[2] && t>0) return true;
+    } else {
+        t = (dot(n1, bb_max_-_ray.origin))/(dot(n1, _ray.direction));
+        intersection = _ray(t);
+        if(intersection[0]>bb_min_[0] && intersection[0]<bb_max_[0] &&
+           intersection[2]>bb_min_[2] && intersection[2]<bb_max_[2] && t>0) return true;
+    }
+
+    if (_ray.origin[2]<bb_min_[2]){
+        t = (dot(n1, bb_min_-_ray.origin))/(dot(n1, _ray.direction));
+        intersection = _ray(t);
+        if(intersection[1]>bb_min_[1] && intersection[1]<bb_max_[1] &&
+           intersection[0]>bb_min_[0] && intersection[0]<bb_max_[0] && t>0) return true;
+    } else {
+        t = (dot(n1, bb_max_-_ray.origin))/(dot(n1, _ray.direction));
+        intersection = _ray(t);
+        if(intersection[1]>bb_min_[1] && intersection[1]<bb_max_[1] &&
+           intersection[0]>bb_min_[0] && intersection[0]<bb_max_[0] && t>0) return true;
+    }
+    return false;
+
 }
 
 
@@ -236,8 +321,54 @@ intersect_triangle(const Triangle&  _triangle,
     const vec3& p1 = vertices_[_triangle.i1].position;
     const vec3& p2 = vertices_[_triangle.i2].position;
 
+    /** \todo
+    * - intersect _ray with _triangle
+    * - store intersection point in `_intersection_point`
+    * - store ray parameter in `_intersection_t`
+    * - store normal at intersection point in `_intersection_normal`.
+    * - Depending on the member variable `draw_mode_`, use either the triangle
+    *  normal (`Triangle::normal`) or interpolate the vertex normals (`Vertex::normal`).
+    * - return `true` if there is an intersection with t > 0 (in front of the viewer)
+    *
+    * Hint: Rearrange `ray.origin + t*ray.dir = a*p0 + b*p1 + (1-a-b)*p2` to obtain a solvable
+    * system for a, b and t.
+    * Refer to [Cramer's Rule](https://en.wikipedia.org/wiki/Cramer%27s_rule) to easily solve it.
+     */
 
-    return false;
+    _intersection_t = NO_INTERSECTION;
+
+    // if ray x normal != 0 -> intersection of plane and ray exists
+    if(dot(_triangle.normal, _ray.direction)==0){
+        return false;
+    }
+
+
+    //TODO
+
+    // solve x = aA +bB + cC and a+b+c=1 -> if there exists a solution intersection
+    double a,b,t;
+    //solve: _ray(t) = a*p0 + b*p1 + (1-a-b)*p2;
+    // t =
+
+
+
+    // check if intersection is in front of viewer: t>0 return true
+    if(t<0){
+        return false;
+    }
+    _intersection_t = t;
+    _intersection_point = _ray(t);
+
+    // compute normal depending on draw_mode_
+    if(draw_mode_ == PHONG){
+        double w0,w1,w2;
+        angleWeights(p0,p1,p2,w0,w1,w2);
+        _intersection_normal = normalize(a*vertices_[_triangle.i0].normal + b*vertices_[_triangle.i1].normal + (1-a-b)*vertices_[_triangle.i2].normal);
+    }
+    else if (draw_mode_ == FLAT){
+        _intersection_normal = _triangle.normal;
+    }
+    return true;
 }
 
 
