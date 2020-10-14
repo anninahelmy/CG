@@ -307,7 +307,10 @@ bool Mesh::intersect(const Ray& _ray,
 
 
 //-----------------------------------------------------------------------------
-
+static double determinant(vec3 _x, vec3 _y, vec3 _z){
+    return _x[0] * _y[1] * _z[2] + _x[1] * _y[2] * _z[0] + _x[2] * _y[0] * _z[1]
+           - (_x[2] * _y[1] * _z[0] + _x[0] * _y[2] * _z[1] + _x[1] * _y[0] * _z[2]) ;
+}
 
 bool
 Mesh::
@@ -343,17 +346,37 @@ intersect_triangle(const Triangle&  _triangle,
     }
 
 
+
     //TODO
+    /**Hint: Rearrange `ray.origin + t*ray.dir = a*p0 + b*p1 + (1-a-b)*p2` to obtain a solvable
+    * system for a, b and t.
+    * Refer to [Cramer's Rule](https://en.wikipedia.org/wiki/Cramer%27s_rule) to easily solve it.
+    * solve x = aA +bB + cC and a+b+c=1 -> if there exists a solution intersection
+     * ray_origin = a*p0 + b*p1 + (1-a-b)*p2 - t*ray.dir
+     * set c = 1-a-b
+     * then we have the system:
+     * ray_origin = a*p0 + b*p1 + c*p2 - t*ray.dir
+     * ray_origin - p2 = a*p0 + b*p1 - t*ray.dir
+     */
+    double a,b,c,t;
 
-    // solve x = aA +bB + cC and a+b+c=1 -> if there exists a solution intersection
-    double a,b,t;
-    //solve: _ray(t) = a*p0 + b*p1 + (1-a-b)*p2;
-    // t =
+    vec3 ray_dir = _ray.direction;
+    vec3 ray_origin = _ray.origin;
+    double det, det_A1, det_A2, det_A3;
+    det = determinant(p0,p1,-ray_dir);
+    det_A1 = determinant(ray_origin-p2, p1, -ray_dir);
+    det_A2 = determinant(p0, ray_origin-p2, -ray_dir);
+    det_A3 = determinant(p0, p1, ray_origin-p2);
 
-
-
+    if (det == 0){
+        return false;
+    }
+    a = det_A1/det;
+    b = det_A2/det;
+    c = 1-a-b;
+    t = det_A3/det;
     // check if intersection is in front of viewer: t>0 return true
-    if(t<0){
+    if(t<0||a<0||b<0||c<0){
         return false;
     }
     _intersection_t = t;
@@ -370,6 +393,5 @@ intersect_triangle(const Triangle&  _triangle,
     }
     return true;
 }
-
 
 //=============================================================================
