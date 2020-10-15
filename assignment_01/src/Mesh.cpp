@@ -348,45 +348,45 @@ intersect_triangle(const Triangle&  _triangle,
 
 
     //TODO
-    /**Hint: Rearrange `ray.origin + t*ray.dir = a*p0 + b*p1 + (1-a-b)*p2` to obtain a solvable
-    * system for a, b and t.
-    * Refer to [Cramer's Rule](https://en.wikipedia.org/wiki/Cramer%27s_rule) to easily solve it.
+    /**
     * solve x = aA +bB + cC and a+b+c=1 -> if there exists a solution intersection
+     * ray.origin + t*ray.dir = a*p0 + b*p1 + (1-a-b)*p2
      * ray_origin = a*p0 + b*p1 + (1-a-b)*p2 - t*ray.dir
+     * ray_origin = a*p0 + b*p1 + p2 - a*p2 - b*p2 - t*ray.dir
+     * ray_origin = a*(p0-p2) + b*(p1-p2) + p2 - t*ray.dir
+     * ray_origin -p2 = a*(p0-p2) + b*(p1-p2) - t*ray.dir
      * set c = 1-a-b
-     * then we have the system:
-     * ray_origin = a*p0 + b*p1 + c*p2 - t*ray.dir
-     * ray_origin - p2 = a*p0 + b*p1 - t*ray.dir
+     * Cramers Rule and solve the equations.
      */
     double a,b,c,t;
 
     vec3 ray_dir = _ray.direction;
     vec3 ray_origin = _ray.origin;
     double det, det_A1, det_A2, det_A3;
-    det = determinant(p0,p1,-ray_dir);
-    det_A1 = determinant(ray_origin-p2, p1, -ray_dir);
-    det_A2 = determinant(p0, ray_origin-p2, -ray_dir);
-    det_A3 = determinant(p0, p1, ray_origin-p2);
+    det = determinant(p0-p2,p1-p2,-ray_dir);
+    det_A1 = determinant(ray_origin-p2, p1-p2, -ray_dir);
+    det_A2 = determinant(p0-p2, ray_origin-p2, -ray_dir);
+    det_A3 = determinant(p0-p2, p1-p2, ray_origin-p2);
 
     if (det == 0){
         return false;
     }
     a = det_A1/det;
     b = det_A2/det;
-    c = 1-a-b;
     t = det_A3/det;
+    c = 1-a-b;
     // check if intersection is in front of viewer: t>0 return true
     if(t<0||a<0||b<0||c<0){
         return false;
     }
     _intersection_t = t;
-    _intersection_point = _ray(t);
+    _intersection_point = _ray(_intersection_t);
 
     // compute normal depending on draw_mode_
     if(draw_mode_ == PHONG){
         double w0,w1,w2;
         angleWeights(p0,p1,p2,w0,w1,w2);
-        _intersection_normal = normalize(a*vertices_[_triangle.i0].normal + b*vertices_[_triangle.i1].normal + (1-a-b)*vertices_[_triangle.i2].normal);
+        _intersection_normal = normalize(a*vertices_[_triangle.i0].normal + b*vertices_[_triangle.i1].normal + c*vertices_[_triangle.i2].normal);
     }
     else if (draw_mode_ == FLAT){
         _intersection_normal = _triangle.normal;
