@@ -36,29 +36,21 @@ intersect(const Ray& _ray,
           double&    _intersection_t ) const
 {
 
+    const double dn = dot(_ray.direction, normal);
 
-    const vec3 &dir = _ray.direction;
-    const vec3 oc = _ray.origin;
-
-    _intersection_t = NO_INTERSECTION;
-
-
-    if (dot(dir, normal) == 0)
-        return false;
-    else {
-        _intersection_t = (dot(normal, center-oc))/(dot(normal, dir));
-        if (_intersection_t<0){
-            _intersection_t = NO_INTERSECTION;
+    if (fabs(dn) > std::numeric_limits<double>::min())
+    {
+        const double t = dot(normal, center-_ray.origin) / dn;
+        if (t > 0)
+        {
+            _intersection_t      = t;
+            _intersection_point  = _ray(t);
+            _intersection_normal = normal;
+            return true;
         }
     }
 
-    if(_intersection_t == NO_INTERSECTION)
-        return false;
-
-    _intersection_point = _ray(_intersection_t);
-    _intersection_normal = normal;
-
-    return true;
+    return false;
 }
 
 
