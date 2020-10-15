@@ -95,20 +95,18 @@ vec3 Scene::trace(const Ray& _ray, int _depth)
     // compute local Phong lighting (ambient+diffuse+specular)
     vec3 color = lighting(point, normal, -_ray.direction, object->material);
 
-    // - check whether `object` is reflective by checking its `material.mirror` and checking recursion depth
-    /**Theory:
-     * At each intersection point, reflect and/or refract incoming viewing ray at surface normal,
-     * and trace child rays recursively.The final color is interpolated between local illumination,
-     * reflection, and refraction based on material properties.
-     * interpolation: color = (1 − α) · color + α · reflected_color, with α the material mirror of object
-     * reflected_color is computed by recursively tracing a ray reflected at the intersection point
-     */
 
-    if(_depth<max_depth&&object->material.mirror>0.0){
-        vec3 reflected = reflect(_ray.direction, normal); //reflect incoming viewing ray at surface normal. is describing the direction of reflected ray!
-        Ray reflectedRAY(point + reflected*reflection_ray_offset, reflected); //create reflected ray. add offset.
-        double material_mirror = object -> material.mirror; //add how reflective the material is, with material.mirror property
-        color = (1-material_mirror)*color + material_mirror*trace(reflectedRAY, _depth+1); //recursion!!
+    // recursive call to collect color from reflections
+    if (object->material.mirror > 0.0 && _depth < max_depth)
+    {
+        vec3 refl_dir = reflect(_ray.direction, normal);
+        Ray  reflected_ray(point + reflection_ray_offset * refl_dir, refl_dir);
+        double mmirror = object->material.mirror;
+        //linear interpolation of reflected and current color
+        color = (1.0 - mmirror) * color + mmirror * trace(reflected_ray, _depth+1);
+
+        //!simple addition is wrong!:
+        //color+= mmirror * trace(reflected_ray, _depth+1);
     }
 
     return color;
@@ -139,62 +137,45 @@ bool Scene::intersect(const Ray& _ray, Object_ptr& _object, vec3& _point, vec3& 
     return (tmin != Object::NO_INTERSECTION);
 }
 
-vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view, const Material& _material) {
-    /**
-     * ambient:
-     * ambient light color: (material ambient reflection coefficient)*(ambient light intensity for scene)
-     */
-    vec3 ambientLight = (_material.ambient * ambience);
-    vec3 diffuseLight = vec3(0, 0, 0);
-    vec3 specularLight = vec3(0, 0, 0);
+vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view, const Material& _material)
+{
 
-    /**
-     * iterate over all light sources
-     */
-    for (const Light &light : lights) {
-        vec3 l_direction = normalize(light.position - _point);
-        /**
-         * check: is point in shadow?
-         */
-        Ray shadow(_point + l_direction * shadow_ray_offset, l_direction);
-        Object_ptr object;
-        vec3 point;
-        vec3 normal;
-        double t;
+    vec3 color = ambience * _material.ambient;
 
-        double l_distance = distance(_point, light.position);
-        if (!intersect(shadow, object, point, normal, t) && (t < l_distance)) {
-            //check if light comes from right direction.
+    // loop over each light source
+    for (const Light& light: lights)
+    {
+        // compute light direction and distance from light source
+        vec3   light_direction = normalize(light.position - _point);
+        double light_distance  = distance(light.position, _point);
 
-            if (dot(l_direction, _normal) > 0.0) {
-                /**
-                * diffusion: I_l*m_d(n\dot l)where
-                * I_l is the intensity of light source,
-                * m_d is materials diffuse reflection coefficient.
-                * light direction l and normalized vector n
-                **/
-                vec3 lightcolor = light.color;
-                diffuseLight += lightcolor * dot(l_direction, _normal) * _material.diffuse;
-                /**
-                 * specular reflection: I_l*m_s(r\dotv)^s with
-                 * I_l is the intensity of light source,
-                 * m_s the materials specular reflection coefficient
-                 * r reflected ray
-                 * v refracted ray
-                 * s material shininess
-                 */
-                vec3 reflected_ray = normalize(mirror(l_direction, _normal));
-                if ( dot(_view, reflected_ray) > 0.0) {
-                    //siehe Vorlesung, wenn kleiner als 0 wäre, dann würde man von der anderen Seite auf Ebene schauen
-                    specularLight = specularLight + (_material.specular * light.color) * pow(dot(reflected_ray, _view), _material.shininess);
-                }
+
+        // point in shadow? shoot shadow-ray
+        Ray shadow_ray(_point + shadow_ray_offset * light_direction, light_direction);
+
+        vec3    p, n;
+        double  t;
+        Object_ptr o;
+        if (intersect(shadow_ray, o, p, n, t) && (t < light_distance))
+            continue;
+
+
+        // add light source's diffuse term
+        double NL = dot(light_direction, _normal);
+        if (NL > 0.0)
+        {
+            color += NL * (light.color * _material.diffuse);
+
+            // specular term
+            double RV = dot(_view, mirror(light_direction, _normal));
+            if (RV > 0.0)
+            {
+                color += (light.color * _material.specular) * pow(RV, _material.shininess);
             }
-
         }
     }
-    vec3 color = ambientLight + diffuseLight + specularLight;
-    return color;
 
+    return color;
 }
 
 //-----------------------------------------------------------------------------
