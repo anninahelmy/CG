@@ -225,7 +225,10 @@ bool Mesh::intersect_bounding_box(const Ray& _ray) const
     // check if ray intersect plane: t = (dot(n1, bb_min_-_ray.origin))/(dot(n1, _ray.direction));
     // check which planes of the box need to be checked for intersection
     // if there is an intersection and t is between min and max then the ray intersect with the bounding box.
-    //TODO richtig grusig coded, es git sicher en eleganteri lösig...
+    /*TODO richtig grusig coded, es git sicher en eleganteri lösig...
+     * @Ronja: wahrschinlich chenntme e for-schleife mache...
+     * aber s geit ja eich aues bis uf die komische schwarze flecke
+     * */
     if (_ray.origin[0]<bb_min_[0]){
         t = (dot(n1, bb_min_-_ray.origin))/(dot(n1, _ray.direction));
         intersection = _ray(t);
