@@ -151,7 +151,7 @@ void Mesh::compute_normals()
         v.normal = vec3(0,0,0);
     }
 
-    /** \todo
+    /** \todo: review code
      * In some scenes (e.g the office scene) some objects should be flat
      * shaded (e.g. the desk) while other objects should be Phong shaded to appear
      * realistic (e.g. chairs). You have to implement the following:
@@ -206,7 +206,7 @@ bool Mesh::intersect_bounding_box(const Ray& _ray) const
     * Note that the minimum and maximum point of the bounding box are stored
     * in the member variables `bb_min_` and `bb_max_`. Return whether the ray
     * intersects the bounding box.
-    * This function is ued in `Mesh::intersect()` to avoid the intersection test
+    * This function is used in `Mesh::intersect()` to avoid the intersection test
     * with all triangles of every mesh in the scene. The bounding boxes are computed
     * in `Mesh::compute_bounding_box()`.
     */
@@ -239,24 +239,24 @@ bool Mesh::intersect_bounding_box(const Ray& _ray) const
     }
 
     if (_ray.origin[1]<bb_min_[1]){
-        t = (dot(n1, bb_min_-_ray.origin))/(dot(n1, _ray.direction));
+        t = (dot(n2, bb_min_-_ray.origin))/(dot(n2, _ray.direction));
         intersection = _ray(t);
         if(intersection[0]>bb_min_[0] && intersection[0]<bb_max_[0] &&
            intersection[2]>bb_min_[2] && intersection[2]<bb_max_[2] && t>0) return true;
     } else {
-        t = (dot(n1, bb_max_-_ray.origin))/(dot(n1, _ray.direction));
+        t = (dot(n2, bb_max_-_ray.origin))/(dot(n2, _ray.direction));
         intersection = _ray(t);
         if(intersection[0]>bb_min_[0] && intersection[0]<bb_max_[0] &&
            intersection[2]>bb_min_[2] && intersection[2]<bb_max_[2] && t>0) return true;
     }
 
     if (_ray.origin[2]<bb_min_[2]){
-        t = (dot(n1, bb_min_-_ray.origin))/(dot(n1, _ray.direction));
+        t = (dot(n3, bb_min_-_ray.origin))/(dot(n3, _ray.direction));
         intersection = _ray(t);
         if(intersection[1]>bb_min_[1] && intersection[1]<bb_max_[1] &&
            intersection[0]>bb_min_[0] && intersection[0]<bb_max_[0] && t>0) return true;
     } else {
-        t = (dot(n1, bb_max_-_ray.origin))/(dot(n1, _ray.direction));
+        t = (dot(n3, bb_max_-_ray.origin))/(dot(n3, _ray.direction));
         intersection = _ray(t);
         if(intersection[1]>bb_min_[1] && intersection[1]<bb_max_[1] &&
            intersection[0]>bb_min_[0] && intersection[0]<bb_max_[0] && t>0) return true;
@@ -312,6 +312,7 @@ static double determinant(vec3 _x, vec3 _y, vec3 _z){
            - (_x[2] * _y[1] * _z[0] + _x[0] * _y[2] * _z[1] + _x[1] * _y[0] * _z[2]) ;
 }
 
+//todo: review code
 bool
 Mesh::
 intersect_triangle(const Triangle&  _triangle,
@@ -324,19 +325,6 @@ intersect_triangle(const Triangle&  _triangle,
     const vec3& p1 = vertices_[_triangle.i1].position;
     const vec3& p2 = vertices_[_triangle.i2].position;
 
-    /** \todo
-    * - intersect _ray with _triangle
-    * - store intersection point in `_intersection_point`
-    * - store ray parameter in `_intersection_t`
-    * - store normal at intersection point in `_intersection_normal`.
-    * - Depending on the member variable `draw_mode_`, use either the triangle
-    *  normal (`Triangle::normal`) or interpolate the vertex normals (`Vertex::normal`).
-    * - return `true` if there is an intersection with t > 0 (in front of the viewer)
-    *
-    * Hint: Rearrange `ray.origin + t*ray.dir = a*p0 + b*p1 + (1-a-b)*p2` to obtain a solvable
-    * system for a, b and t.
-    * Refer to [Cramer's Rule](https://en.wikipedia.org/wiki/Cramer%27s_rule) to easily solve it.
-     */
 
     _intersection_t = NO_INTERSECTION;
 
@@ -345,9 +333,6 @@ intersect_triangle(const Triangle&  _triangle,
         return false;
     }
 
-
-
-    //TODO
     /**
     * solve x = aA +bB + cC and a+b+c=1 -> if there exists a solution intersection
      * ray.origin + t*ray.dir = a*p0 + b*p1 + (1-a-b)*p2
