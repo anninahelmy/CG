@@ -232,7 +232,7 @@ bool Mesh::intersect_bounding_box(const Ray& _ray) const
      * */
     if (_ray.origin[0]<bb_min_[0]){
         t = (dot(n1, bb_min_-_ray.origin))/(dot(n1, _ray.direction));
-        intersection = _ray(t);
+        vec3 intersection = _ray(t);
         if(intersection[1]>bb_min_[1] && intersection[1]<bb_max_[1] &&
            intersection[2]>bb_min_[2] && intersection[2]<bb_max_[2] && t>0) return true;
     } else {
