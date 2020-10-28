@@ -92,6 +92,23 @@ keyboard(int key, int scancode, int action, int mods)
                  *    - key 9 should increase and key 8 should decrease the `dist_factor_`
                  *    - 2.5 < `dist_factor_` < 20.0
                  */
+            case GLFW_KEY_8: //decrease
+            {
+                dist_factor_-= 0.5;
+                if(dist_factor_ < 2.5){
+                    dist_factor_ = 2.5;
+                }
+                break;
+            }
+
+            case GLFW_KEY_9: //increase
+            {
+                dist_factor_+= 0.5;
+                if(dist_factor_ > 20){
+                    dist_factor_ = 20;
+                }
+                break;
+            }
 
             case GLFW_KEY_R:
             {
@@ -211,12 +228,16 @@ void Solar_viewer::update_body_positions() {
      *The planets’ positions along this orbit are given by the current value of angle angle_orbit_,
      * which is gradually increased as the simulation time passes.
      * */
-    moon_.pos_ = mat4::translate(earth_.pos_)*mat4::rotate_y(moon_.angle_orbit_)*(earth_.pos_+vec4(moon_.distance_, 0,0,1));
-    std::array<Planet *, 4> bodies={&venus_, &mars_, &earth_, &mercury_};
-    for(int i = 0; i<4; i++){
-        Planet* planet_  = bodies.at(i);
-        planet_->pos_ = mat4::rotate_y(planet_->angle_orbit_)*(sun_.pos_ + vec4(planet_->distance_, 0,0,1));
 
+    std::array<Planet *, 5> bodies={&venus_, &mars_, &earth_, &mercury_, &moon_};
+    for(int i = 0; i<5; i++){
+        Planet *planet_ = bodies.at(i);
+        vec4 x = sun_.pos_ + vec4(planet_->distance_, 0,0,1);
+        planet_->pos_ = mat4::rotate_y(planet_->angle_orbit_)*x;
+        if(i == 4){
+            vec3 earth_pos = earth_.pos_;
+            planet_->pos_ = mat4::translate(earth_pos)*mat4::rotate_y(planet_->angle_orbit_)*vec4(planet_->distance_,0,0,1);
+        }
     }
 }
 
@@ -363,10 +384,24 @@ void Solar_viewer::paint()
     float radius = sun_.radius_;
     mat4    view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
  **/
+ vec4 center;
+ float x_angle;
+ float y_angle;
+ float radius;
+    if(in_ship_){
+        center = ship_.pos_;
+         radius = 2.0 * ship_.radius_;
+         x_angle = 20;
+         y_angle = y_angle_;
+    }
+    else{
+        center = planet_to_look_at_->pos_;
+         radius = planet_to_look_at_->radius_;
+         x_angle = x_angle_;
+         y_angle = y_angle_;
+    }
 
-    vec4 center = planet_to_look_at_->pos_;
-    float radius = planet_to_look_at_->radius_;
-    vec4 up = mat4::rotate_y(y_angle_)*mat4::rotate_x(x_angle_)*vec4(0,1,0,0);
+    vec4 up = mat4::rotate_y(y_angle)*mat4::rotate_x(x_angle)*vec4(0,1,0,0);
     vec4 eye_point = mat4::translate(center)*mat4::rotate_x(x_angle_)*mat4::rotate_y(y_angle_)*vec4(0,0,dist_factor_*radius, 1);
 
     billboard_x_angle_ = billboard_y_angle_ = 0.0f;
