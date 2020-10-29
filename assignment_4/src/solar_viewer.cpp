@@ -43,7 +43,7 @@ Solar_viewer::Solar_viewer(const char* _title, int _width, int _height)
 {
     // start animation
     timer_active_ = true;
-    time_step_ = 1.0f/24.0f; // one hour
+    time_step_ = 128 /24.0f; // one hour
 
     // rendering parameters
     greyscale_     = false;
@@ -229,13 +229,14 @@ void Solar_viewer::update_body_positions() {
      * which is gradually increased as the simulation time passes.
      * */
 
-    std::array<Planet *, 4> bodies={&venus_, &mars_, &earth_, &mercury_, };
+    std::array<Planet *, 4> bodies={&venus_, &mars_, &earth_, &mercury_};
+
     for(int i = 0; i<4; i++){
         Planet *planet_ = bodies.at(i);
-        vec4 x = sun_.pos_ + vec4(planet_->distance_, 0,0,1);
-        planet_->pos_ = mat4::rotate_y(planet_->angle_orbit_)*x;
-
+        vec4 x = vec4(planet_->distance_, 0,0,1);
+        planet_->pos_ = (mat4::rotate_y(planet_->angle_orbit_)*x);
     }
+
     moon_.pos_ = earth_.pos_ + (mat4::rotate_y(moon_.angle_orbit_)*vec4(moon_.distance_,0,0,1));
 
 }
@@ -387,21 +388,27 @@ void Solar_viewer::paint()
  float x_angle;
  float y_angle;
  float radius;
+ vec4 up;
+ vec4 eye_point;
     if(in_ship_){
         center = ship_.pos_;
-        radius = 7.0 * ship_.radius_;
-        x_angle = 20;
+        radius = ship_.radius_; //otherwise too close
+        x_angle = 10;
         y_angle = y_angle_ + ship_.angle_;
+
+        up = mat4::rotate_y(y_angle)*mat4::rotate_x(x_angle)*vec4(0,1,0,0);
+        eye_point = center + (mat4::rotate_y(y_angle_)*mat4::rotate_x(x_angle_)*vec4(0,0,-dist_factor_*radius, 1));
     }
     else{
         center = planet_to_look_at_->pos_;
         radius = planet_to_look_at_->radius_;
         x_angle = x_angle_;
         y_angle = y_angle_;
+
+        up = mat4::rotate_y(y_angle)*mat4::rotate_x(x_angle)*vec4(0,1,0,0);
+        eye_point = center + (mat4::rotate_y(y_angle_)*mat4::rotate_x(x_angle_)*vec4(0,0,dist_factor_*radius, 1));
     }
 
-    vec4 up = mat4::rotate_y(y_angle)*mat4::rotate_x(x_angle)*vec4(0,1,0,0);
-    vec4 eye_point = center + (mat4::rotate_y(y_angle_)*mat4::rotate_x(x_angle_)*vec4(0,0,dist_factor_*radius, 1));
 
     billboard_x_angle_ = billboard_y_angle_ = 0.0f;
     mat4 view = mat4::look_at(vec3(eye_point),vec3(center), vec3(up));
@@ -491,7 +498,7 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
     }
 
     //ship
-    m_matrix = mat4::scale(ship_.radius_)*mat4::translate(ship_.pos_)*mat4::rotate_y(ship_.angle_);
+    m_matrix = mat4::translate(ship_.pos_)*mat4::scale(ship_.radius_)*mat4::rotate_y(ship_.angle_);
     mv_matrix = _view * m_matrix;
     mvp_matrix = _projection * mv_matrix;
     color_shader_.use();
