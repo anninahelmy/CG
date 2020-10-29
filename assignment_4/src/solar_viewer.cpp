@@ -229,16 +229,15 @@ void Solar_viewer::update_body_positions() {
      * which is gradually increased as the simulation time passes.
      * */
 
-    std::array<Planet *, 5> bodies={&venus_, &mars_, &earth_, &mercury_, &moon_};
-    for(int i = 0; i<5; i++){
+    std::array<Planet *, 4> bodies={&venus_, &mars_, &earth_, &mercury_, };
+    for(int i = 0; i<4; i++){
         Planet *planet_ = bodies.at(i);
         vec4 x = sun_.pos_ + vec4(planet_->distance_, 0,0,1);
         planet_->pos_ = mat4::rotate_y(planet_->angle_orbit_)*x;
-        if(i == 4){
-            vec3 earth_pos = earth_.pos_;
-            planet_->pos_ = mat4::translate(earth_pos)*mat4::rotate_y(planet_->angle_orbit_)*vec4(planet_->distance_,0,0,1);
-        }
+
     }
+    moon_.pos_ = earth_.pos_ + (mat4::rotate_y(moon_.angle_orbit_)*vec4(moon_.distance_,0,0,1));
+
 }
 
 //-----------------------------------------------------------------------------
@@ -390,19 +389,19 @@ void Solar_viewer::paint()
  float radius;
     if(in_ship_){
         center = ship_.pos_;
-         radius = 2.0 * ship_.radius_;
-         x_angle = 20;
-         y_angle = y_angle_;
+        radius = 7.0 * ship_.radius_;
+        x_angle = 20;
+        y_angle = y_angle_ + ship_.angle_;
     }
     else{
         center = planet_to_look_at_->pos_;
-         radius = planet_to_look_at_->radius_;
-         x_angle = x_angle_;
-         y_angle = y_angle_;
+        radius = planet_to_look_at_->radius_;
+        x_angle = x_angle_;
+        y_angle = y_angle_;
     }
 
     vec4 up = mat4::rotate_y(y_angle)*mat4::rotate_x(x_angle)*vec4(0,1,0,0);
-    vec4 eye_point = mat4::translate(center)*mat4::rotate_x(x_angle_)*mat4::rotate_y(y_angle_)*vec4(0,0,dist_factor_*radius, 1);
+    vec4 eye_point = center + (mat4::rotate_y(y_angle_)*mat4::rotate_x(x_angle_)*vec4(0,0,dist_factor_*radius, 1));
 
     billboard_x_angle_ = billboard_y_angle_ = 0.0f;
     mat4 view = mat4::look_at(vec3(eye_point),vec3(center), vec3(up));
@@ -474,27 +473,19 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
     /** \todo Render the star background, the spaceship, and the rest of the celestial bodies.
      *
      */
-     //render earth
-    m_matrix = mat4::scale(earth_.radius_)*mat4::translate(earth_.pos_)*mat4::rotate_y(earth_.angle_self_);
-    mv_matrix = _view * m_matrix;
-    mvp_matrix = _projection * mv_matrix;
-    color_shader_.use();
-    color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
-    color_shader_.set_uniform("greyscale", (int)greyscale_);
-    earth_.tex_.bind();
-    unit_sphere_.draw();
-     std::array<Planet *, 4> bodies={&venus_, &mars_, &moon_, &mercury_};
-    for(int i = 0; i < 4; i++){
+
+    std::array<Planet *, 5> bodies={&mars_, &venus_,&moon_, &mercury_, &earth_};
+    for(int i = 0; i < 5; i++){
         Planet* planet_  = bodies.at(i);
         vec4 pos = planet_->pos_;
-        m_matrix = mat4::scale(planet_->radius_)*mat4::translate(pos)*mat4::rotate_y(planet_->angle_self_);
+        m_matrix = mat4::translate(pos)*mat4::scale(planet_->radius_)*mat4::rotate_y(planet_->angle_self_);
         mv_matrix = _view * m_matrix;
         mvp_matrix = _projection * mv_matrix;
         color_shader_.use();
         color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
         color_shader_.set_uniform("tex", 0);
         color_shader_.set_uniform("greyscale", (int)greyscale_);
-        stars_.tex_.bind();
+        planet_->tex_.bind();
         unit_sphere_.draw();
 
     }
@@ -507,8 +498,8 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
     color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
     color_shader_.set_uniform("tex", 0);
     color_shader_.set_uniform("greyscale", (int)greyscale_);
-    stars_.tex_.bind();
-    unit_sphere_.draw();
+    ship_.tex_.bind();
+    ship_.draw();
 
     // check for OpenGL errors
     glCheckError();
