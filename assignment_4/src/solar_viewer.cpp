@@ -348,42 +348,6 @@ void Solar_viewer::paint()
     // clear framebuffer and depth buffer first
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    /** \todo Implement navigation through the solar system.
-     *   - Allow camera rotation by modifying the view matrix.
-     *     `x_angle_` and `y_angle` hold the necessary information and are
-     *     updated by key presses (see `Solar_viewer::keyboard(...)`).
-     *   - Position the camera at distance `dist_factor_` from the planet's center (in units of planet radii).
-     *     This distance should be controlled by keys 8 and 9.
-     *   - When keys `1` to `6` are pressed, the camera should move to look at
-     *     the corresponding celestial body (this functionality is already provided,
-     *     see `Solar_viewer::keyboard(...)`).
-     *   - Pointer `planet_to_look_at_` stores the current body to view.
-     *   - When you are in spaceship mode (member in_ship_), the camera should
-     *     hover slightly behind and above the ship and rotate along with it (so that
-     *     when the ship moves and turns it always remains stationary in view
-     *     while the solar system moves and spins around it).
-     *
-     *  Hint: planet centers are stored in "Planet::pos_".
-     */
-
-    /**
-     * Fill in the missing code in the function paint().
-     * In this part, you will build the view matrix, which effectively positions and orients
-     * the eye in the scene. You should make the eye point at the selected object
-     * (a planet, moon, or the spaceship). By default, the eye points in the negative z-axis
-     * (see Figure 2 (b)). Given the object to be observed (selected by keys 1-7), first place
-     * the eye at (positive) distance dist_factor_ ∗ radius on the z′-axis, which passes through
-     * the object’s center and runs parallel to the z-axis of the world coordinate frame.
-     * (Note that dist_factor_ can be increased/decreased by keys 8/9.)
-     */
-     //eye point at selected object
-    /** For now, view the sun from a fixed position...
-    vec4     eye = vec4(0,0,7,1.0);
-    vec4  center = sun_.pos_;
-    vec4      up = vec4(0,1,0,0);
-    float radius = sun_.radius_;
-    mat4    view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
- **/
  vec4 center;
  float x_angle;
  float y_angle;
@@ -409,7 +373,11 @@ void Solar_viewer::paint()
         eye_point = center + (mat4::rotate_y(y_angle_)*mat4::rotate_x(x_angle_)*vec4(0,0,dist_factor_*radius, 1));
     }
 
-
+    /** \todo Orient the billboard used to display the sun's glow
+     *  Update billboard_x_andle_ and billboard_y_angle_ so that the billboard plane
+     *  drawn to produce the sun's halo is orthogonal to the view vector for
+     *  the sun's center.
+     */
     billboard_x_angle_ = billboard_y_angle_ = 0.0f;
     mat4 view = mat4::look_at(vec3(eye_point),vec3(center), vec3(up));
     mat4 projection = mat4::perspective(fovy_, (float)width_/(float)height_, near_, far_);
@@ -477,9 +445,23 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
     color_shader_.set_uniform("greyscale", (int)greyscale_);
     stars_.tex_.bind();
     unit_sphere_.draw();
-    /** \todo Render the star background, the spaceship, and the rest of the celestial bodies.
-     *
+    /** \todo Switch from using color_shader_ to the fancier shaders you'll
+     * implement in this assignment:
+     *      mercury, venus, moon, mars, ship: phong_shader_
+     *      earth: earth_shader_
+     *      stars, sunglow: still use color_shader_
+     *  You'll need to make sure all the GLSL uniform variables are set. For
+     *  Phong shading, you need to pass in the modelview matrix, the normal transformation
+     *  matrix, and light position in addition to the color_shader_ parameters.
      */
+
+    /** \todo Render the sun's halo here using the "color_shader_"
+    *   - Construct a model matrix that scales the billboard to 3 times the
+    *     sun's radius and orients it according to billboard_x_angle_ and
+    *     billboard_y_angle_
+    *   - Bind the texture for and draw sunglow_
+    **/
+
 
     std::array<Planet *, 5> bodies={&mars_, &venus_,&moon_, &mercury_, &earth_};
     for(int i = 0; i < 5; i++){
