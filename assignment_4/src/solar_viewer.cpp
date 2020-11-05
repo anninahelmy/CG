@@ -327,34 +327,27 @@ void Solar_viewer::paint()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     vec4 eye, center, up;
+    float radius, x_rotation, y_rotation;
 
     if (in_ship_)
     {
-        // - We use a hard-coded multiple of the ship radius, since using the ship's radius
-        //   directly places us too close
-        float radius = 5.0f * ship_.radius_;
-        // - The vector pointing from the ship's rear to its front is given by a
-        //   rotation of (0, 0, 1) around the y axis by ship_.angle_. To move the
-        //   eye behind the ship, we need to offset in the -z direction;
-        // - To position the camera slightly above the ship, we first rotate
-        //   (0, 0, -1) ccw around the x axis (producing a positive y
-        //   offset). This rotation must happen before the rotation by ship_.angle_
-        //   (otherwise rotating the ship will cause the camera to wobble),
-        //   which is why we can't just use ship.direction_.
         center = ship_.pos_;
-        // add the ship angle to the rotation so the viewing angle stays constant w.r.t. the ship
-        mat4 rot = mat4::rotate_y(y_angle_ + ship_.angle_) * mat4::rotate_x(15.0f);
-        eye = center + rot * vec4(0, 0, -dist_factor_ * radius, 1);
-        up = rot * vec4(0, 1, 0, 0);
+        y_rotation = y_angle_ + ship_.angle_;
+        x_rotation = -10.0f;
+        radius = 2.0f * ship_.radius_;
     }
     else // not in ship
     {
         center = planet_to_look_at_->pos_;
-        mat4 rot = mat4::rotate_y(y_angle_) * mat4::rotate_x(x_angle_);
-        float radius = planet_to_look_at_->radius_;
-        eye = center + rot * vec4(0, 0, (dist_factor_ * radius), 1);
-        up = rot * vec4(0, 1, 0, 0);
+        radius = planet_to_look_at_->radius_;
+        x_rotation = x_angle_;
+        y_rotation = y_angle_;
     }
+
+    mat4 rotation = mat4::rotate_y(y_rotation) * mat4::rotate_x(x_rotation);
+    eye = center + rotation * vec4(0, 0, (dist_factor_ * radius), 0);
+    up = rotation * vec4(0, 1, 0, 0);
+    
 
     mat4 view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
 
@@ -364,8 +357,8 @@ void Solar_viewer::paint()
      *  the sun's center.
      */
 
-    billboard_x_angle_ = x_angle_;
-    billboard_y_angle_ = y_angle_;
+    billboard_x_angle_ = x_rotation;
+    billboard_y_angle_ = y_rotation;
 
     mat4 projection = mat4::perspective(fovy_, (float)width_ / (float)height_, near_, far_);
     draw_scene(projection, view);
@@ -497,7 +490,6 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
     earth_shader_.set_uniform("greyscale", (int)(greyscale_));
     earth_.tex_.bind();
     unit_sphere_.draw();
-    earth_shader_.disable();
 
 
 
@@ -509,19 +501,21 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
      **/
 
      // render sunglow_
+    
     m_matrix = mat4::rotate_y(billboard_y_angle_) * mat4::rotate_x(billboard_x_angle_) * mat4::scale(3 * sun_.radius_);
-    //m_matrix = mat4::translate(sun_.pos_) * mat4::scale(3*sun_.radius_) * mat4::rotate_y(billboard_y_angle_) * mat4::rotate_x(billboard_x_angle_);
     mv_matrix = _view * m_matrix;
     mvp_matrix = _projection * mv_matrix;
     color_shader_.use();
-    glEnable(GL_BLEND); // enable blending in order to make transparancy work
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // set BlendFunc 
     color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
     color_shader_.set_uniform("t", sun_animation_time, true);
     color_shader_.set_uniform("tex", 0);
     color_shader_.set_uniform("greyscale", static_cast<int>(greyscale_));
     sunglow_.tex_.bind();
+    glEnable(GL_BLEND); // enable blending in order to make transparancy work
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // set BlendFunc 
     unit_sphere_.draw();
+    glDisable(GL_BLEND);
+
 
 
     // check for OpenGL errors
