@@ -93,12 +93,6 @@ bool Texture::uploadImage(std::vector<unsigned char> &img, unsigned width, unsig
 
 bool Texture::createSunBillboardTexture()
 {
-    std::cout << "creating sun billboard " << "\n" << std::flush;
-
-    std::vector<unsigned char> img;
-    int width = 900;
-    int height = 900;
-    img.resize(width*height * 4);
     /** \todo Set up the texture for the sun billboard.
    *   - Draw an opaque circle with a 150 pixel radius in its middle
    *   - Outside that circle the texture should become more and more transparent to mimic a nice glow effect
@@ -106,26 +100,23 @@ bool Texture::createSunBillboardTexture()
    *   - Experiment with the color and with how fast you change the transparency until the effect satisfies you
    **/
 
+    std::cout << "creating sun billboard " << "\n" << std::flush;
+
+    std::vector<unsigned char> img;
+    int width = 900;
+    int height = 900;
+    img.resize(width * height * 4);
+
     for (int col = 0; col < width; ++col) {
         for (int row = 0; row < height; ++row) {
-            // calculate distance from point to center
-            // if smaller than 150 pixel chose A=0
-            // if bigger than 450 chose A=255 (fully transparent)
-            // else calculate (distance-150)/300=alpha (alpha is between 0 and 1) -> alpha*255
+            img[(row * width + col) * 4 + 0] = 255; // R
+            img[(row * width + col) * 4 + 1] = 255; // G
+            img[(row * width + col) * 4 + 2] = 255; // B
             float distance = sqrt(pow(width / 2 - col, 2) + pow(height / 2 - row, 2));
             float alpha = 0;
-            if (distance <= 150) {
-                alpha = 0;
-            }
-            else if (distance > 450) {
-                alpha = 255;
-            }
-            else {
-                alpha = (distance - 150) / 300 * 255;
-            }
-            img[(row * width + col) * 4 + 0] = alpha; // R
-            img[(row * width + col) * 4 + 1] = alpha; // G
-            img[(row * width + col) * 4 + 2] = alpha; // B
+            if (distance <= 150) alpha = 0;
+            else if (distance > 450) alpha = 255;
+            else alpha = (distance - 150) / 300 * 255;
             img[(row * width + col) * 4 + 3] = alpha; // A
         }
     }
