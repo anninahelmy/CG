@@ -33,26 +33,21 @@ void main()
      */
 
     vec3 color = vec3(0.0,0.0,0.0);
+    vec3 material = texture(tex, v2f_texcoord.st).rgb;
+	
 
-	vec3 c_material = texture(tex, v2f_texcoord.st).rgb;
-	vec3 I_a = 0.2 * sunlight;
-	vec3 I_in = sunlight;
+	// ambient light
+	color += 0.2 * sunlight * material;
 
-
-	// Add ambient light
-	color += I_a * c_material;
-
-	 // Add diffuse light
-    float nl = dot(v2f_normal, v2f_light);
-	if (nl > 0) {
-		color += I_in * c_material * nl;
+	 // diffuse light
+	if (dot(v2f_normal, v2f_light) > 0) {
+		color += sunlight * material * dot(v2f_normal, v2f_light);
 	}
 
-	// Add specular light
-	vec3 r = reflect(v2f_light, v2f_normal);
-	float rv = dot(v2f_view, r);
-	if (nl > 0 && rv > 0) {
-		color += I_in * c_material * pow(dot(r, v2f_view), shininess);
+	//  specular light
+	float r = dot(v2f_view, reflect(v2f_light, v2f_normal));
+	if (dot(v2f_normal, v2f_light) > 0 && r > 0) {
+		color += sunlight * material * pow(dot(reflect(v2f_light, v2f_normal), v2f_view), shininess);
 	}
 
     // convert RGB color to YUV color and use only the luminance
