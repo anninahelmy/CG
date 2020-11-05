@@ -43,7 +43,7 @@ Solar_viewer::Solar_viewer(const char* _title, int _width, int _height)
 {
     // start animation
     timer_active_ = true;
-    time_step_ = 128 /24.0f; // one hour
+    time_step_ = 30/24.0f; // one hour
 
     // rendering parameters
     greyscale_     = false;
@@ -461,10 +461,27 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
     *     billboard_y_angle_
     *   - Bind the texture for and draw sunglow_
     **/
+    m_matrix = mat4::translate(earth_.pos_) * mat4::rotate_y(earth_.angle_self_) * mat4::scale(earth_.radius_);
+    mv_matrix = _view * m_matrix;
+    mvp_matrix = _projection * mv_matrix;
 
+    mat3 normal_matrix = transpose(inverse(mat3(mv_matrix)));
 
-    std::array<Planet *, 5> bodies={&mars_, &venus_,&moon_, &mercury_, &earth_};
-    for(int i = 0; i < 5; i++){
+    earth_shader_.use();
+    earth_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+    earth_shader_.set_uniform("modelview_matrix", mv_matrix);
+    earth_shader_.set_uniform("normal_matrix", normal_matrix);
+    earth_shader_.set_uniform("light_position", _view* vec4(0, 0, 0, 1));
+    earth_shader_.set_uniform("day_texture", 0);
+    earth_shader_.set_uniform("night_texture", 1);
+    earth_shader_.set_uniform("cloud_texture", 2);
+    earth_shader_.set_uniform("gloss_texture", 3);
+    earth_shader_.set_uniform("greyscale", (int)greyscale_);
+    earth_.tex_.bind();
+    unit_sphere_.draw();
+
+    std::array<Planet *, 4> bodies={&mars_, &venus_,&moon_, &mercury_};
+    for(int i = 0; i < 4; i++){
         Planet* planet_  = bodies.at(i);
         vec4 pos = planet_->pos_;
         m_matrix = mat4::translate(pos)*mat4::scale(planet_->radius_)*mat4::rotate_y(planet_->angle_self_);
