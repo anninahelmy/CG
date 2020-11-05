@@ -12,6 +12,7 @@
 #include <cassert>
 #include <algorithm>
 #include "lodepng.h"
+#include <math.h>
 
 //=============================================================================
 
