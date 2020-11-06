@@ -117,10 +117,10 @@ bool Texture::createSunBillboardTexture()
             int height_difference = height / 2 - row;
             float distance = sqrt(pow(width / 2 - col, 2) + pow(height / 2 - row, 2));
             // define value between 150 and 450
-            float f = fmin(400, fmax(150, distance)); 
+            float f = fmin(400, fmax(150, distance));
             f = (f - 150)/250; // value between 0 and 1
             float alpha = f*100;
-            
+
             img[(row * width + col) * 4 + 3] = alpha; // A
         }
     }
