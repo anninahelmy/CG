@@ -119,7 +119,7 @@ bool Texture::createSunBillboardTexture()
             // define value between 150 and 450
             float f = fmin(400, fmax(150, distance)); 
             f = (f - 150)/250; // value between 0 and 1
-            float alpha = f*100;
+            float alpha = pow(f,2)*200;
             
             img[(row * width + col) * 4 + 3] = alpha; // A
         }

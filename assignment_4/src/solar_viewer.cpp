@@ -357,7 +357,7 @@ void Solar_viewer::paint()
      *  the sun's center.
      */
 
-    billboard_x_angle_ = x_rotation;
+    billboard_x_angle_ = x_rotation + 90.0;
     billboard_y_angle_ = y_rotation;
 
     mat4 projection = mat4::perspective(fovy_, (float)width_ / (float)height_, near_, far_);
