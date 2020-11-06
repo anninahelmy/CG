@@ -28,24 +28,11 @@ uniform vec4 light_position; //in eye space coordinates already
 
 void main()
 {
-
-    // vertex & light in eye coordinates
-    vec3 ec_vertex = (modelview_matrix * v_position).xyz;
-    vec3 ec_light  = (light_position).xyz;
-
-    // transform normal to eye coordinates
-    v2f_normal = normalize(normal_matrix * v_normal);
-
-    // direction to light source
-    v2f_light = ec_light - ec_vertex;
-
-    // viewing vector (from eye to vertex in view coordinates)
-    v2f_view = -ec_vertex.xyz;
-
-    // pass through texture coordinate
     v2f_texcoord = v_texcoord;
+    v2f_light = normalize(vec3(light_position - (modelview_matrix*v_position)));
+    v2f_view = normalize(vec3(modelview_matrix*v_position));
+    v2f_normal = normalize(normal_matrix*v_normal);
 
-    // transform vertex by modelview and projection matrix
     gl_Position = modelview_projection_matrix * v_position;
 
 }
