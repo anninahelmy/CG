@@ -1,0 +1,16 @@
+/Users/annina/CG/CG/assignment_7/build/CMakeFiles/rebuild_cache.dir
+/Users/annina/CG/CG/assignment_7/build/CMakeFiles/edit_cache.dir
+/Users/annina/CG/CG/assignment_7/build/lib/glew/CMakeFiles/rebuild_cache.dir
+/Users/annina/CG/CG/assignment_7/build/lib/glew/CMakeFiles/edit_cache.dir
+/Users/annina/CG/CG/assignment_7/build/lib/glew/CMakeFiles/glew.dir
+/Users/annina/CG/CG/assignment_7/build/lib/glfw/CMakeFiles/rebuild_cache.dir
+/Users/annina/CG/CG/assignment_7/build/lib/glfw/CMakeFiles/edit_cache.dir
+/Users/annina/CG/CG/assignment_7/build/lib/glfw/src/CMakeFiles/rebuild_cache.dir
+/Users/annina/CG/CG/assignment_7/build/lib/glfw/src/CMakeFiles/edit_cache.dir
+/Users/annina/CG/CG/assignment_7/build/lib/glfw/src/CMakeFiles/glfw.dir
+/Users/annina/CG/CG/assignment_7/build/lib/lodePNG/CMakeFiles/rebuild_cache.dir
+/Users/annina/CG/CG/assignment_7/build/lib/lodePNG/CMakeFiles/edit_cache.dir
+/Users/annina/CG/CG/assignment_7/build/lib/lodePNG/CMakeFiles/lodePNG.dir
+/Users/annina/CG/CG/assignment_7/build/src/CMakeFiles/rebuild_cache.dir
+/Users/annina/CG/CG/assignment_7/build/src/CMakeFiles/edit_cache.dir
+/Users/annina/CG/CG/assignment_7/build/src/CMakeFiles/ShadowViewer.dir
