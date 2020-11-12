@@ -44,15 +44,31 @@ mat4 ShadowViewer::m_constructLightViewMatrix(size_t li, size_t cube_face) const
     * defined by scene_view_matrix.
     * Hint: use mat4::look_at
     **/
+    vec4 eye = scene_view_matrix*m_light[li].position();
+    vec3 view;
+    vec3 up;
+
+    if (cube_face == 0){
+        view = vec3(1,0,0);
+        up = vec3(0,1,0);
+    }
+    if (cube_face == 1){
+
+    }
     return mat4::identity() * scene_view_matrix;
+
 }
 
 mat4 ShadowViewer::m_constructLightProjectionMatrix() const {
-    /** \todo
+    /**
     * Construct the projection matrix for rendering the scene from the perspective
     * of the light to generate shadow maps.
+     * return matrix for perspective projection (special case of frustum matrix)
+            static mat4 perspective(float fovy, float aspect, float near, float far)
+           fovy = "field of view y-axis” and is the vertical angle of the camera’s lens.
+           aspect = width divided by the height of the canvas window.
     **/
-    return mat4::identity();
+    return mat4::perspective(90,1.0f,0.1,6);
 }
 
 void ShadowViewer::m_render_shadow_cubemap(size_t li, const mat4 &plane_m_matrix, const mat4 &mesh_m_matrix) {
