@@ -82,7 +82,7 @@ mat4 ShadowViewer::m_constructLightProjectionMatrix() const {
     * Construct the projection matrix for rendering the scene from the perspective
     * of the light to generate shadow maps.
      * return matrix for perspective projection (special case of frustum matrix)
-            static mat4 perspective(float fovy, float aspect, float near, float far)
+            static mat4::perspective(float fovy, float aspect, float near, float far)
            fovy = "field of view y-axis” and is the vertical angle of the camera’s lens.
            aspect = width divided by the height of the canvas window.
     **/
