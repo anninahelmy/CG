@@ -52,11 +52,29 @@ mat4 ShadowViewer::m_constructLightViewMatrix(size_t li, size_t cube_face) const
         view = vec3(1,0,0);
         up = vec3(0,1,0);
     }
-    if (cube_face == 1){
+    else if (cube_face == 1){
+        view = vec3(-1,0,0);
+        up = vec3(0,1,0);
+    }
+    else if(cube_face == 2){
+        view = vec3(0,1,0);
+        up = vec3(0,0,-1);
+    }
+    else if(cube_face == 3){
+        view = vec3(0,-1,0);
+        up = vec3(0,0,1);
+    }
+    else if(cube_face == 4){
+        view = vec3(0,0,1);
+        up = vec3(0,1,0);
+    }
+    else if(cube_face == 5){
+        view = vec3(0,0,-1);
+        up = vec3(0,1,0);
 
     }
-    return mat4::identity() * scene_view_matrix;
 
+    return mat4::look_at(eye,eye + view,up) * scene_view_matrix;
 }
 
 mat4 ShadowViewer::m_constructLightProjectionMatrix() const {
