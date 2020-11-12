@@ -34,7 +34,7 @@ void ShadowViewer::m_updateMesh() {
 mat4 ShadowViewer::m_constructLightViewMatrix(size_t li, size_t cube_face) const {
     assert((li < m_numActiveLights) && (cube_face < 6));
     mat4 scene_view_matrix = m_constructSceneViewMatrix();
-    /** \todo
+    /** \todo  done
     * Construct the viewing matrix for rendering the scene from the perspective
     * of the light looking through cube face number cube_face.
     * Recall that the cube faces are indexed in the order: +x, -x, +y, -y, +z, -z
@@ -144,7 +144,8 @@ void ShadowViewer::draw(const mat4 &view_matrix, const mat4 &projection_matrix) 
     mat4 mesh_mvp_matrix  = projection_matrix * mesh_mv_matrix;
 
 
-    // \todo Construct the matrices for transforming normals into eye coordinates
+    // \todo done
+    //  Construct the matrices for transforming normals into eye coordinates
     //       You can paste in your solution from assignment 6.
     mat3 plane_n_matrix   = inverse(transpose(mat3(plane_mv_matrix)));
     mat3 mesh_n_matrix    = inverse(transpose(mat3(mesh_mv_matrix)));
@@ -171,11 +172,13 @@ void ShadowViewer::draw(const mat4 &view_matrix, const mat4 &projection_matrix) 
     for (size_t li = 0; li < m_numActiveLights; ++li) {
         m_render_shadow_cubemap(li, plane_m_matrix, mesh_m_matrix);
 
-        /** \todo
+        /** \todo done
         * Configure OpenGL to *add* the specular and diffuse contribution
         * output by our shader to the colors already in the framebuffer.
         * Hint: read the documentation for glBlendFunc
         **/
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
 
         m_phong_shader.use();
         m_shadowMap->bind();
@@ -183,13 +186,27 @@ void ShadowViewer::draw(const mat4 &view_matrix, const mat4 &projection_matrix) 
         m_phong_shader.set_uniform("shininess", 8.0f, true); // pass 'optional = true' to avoid 'Invalid uniform location'
         m_phong_shader.set_uniform("shadow_map",   0, true); // warnings caused by incomplete shader implementations
 
-        /** \todo
+        /** \todo done
          * Draw this light's specular and diffuse contribution on the floor
          * plane (m_quad) and mesh (m_mesh) (taking the shadows into account).
          * You'll need to pass in the light position ***in eye coordinates** as
          * well as the proper material and transformation matrices.
          **/
-        m_shadowMap->unbind();
+         m_phong_shader.set_uniform("light_position",vec3(view_matrix*m_light[li].position()));
+         m_phong_shader.set_uniform("light_color", m_light[li].color);
+         m_phong_shader.set_uniform("specular_color", plane_specular);
+         m_phong_shader.set_uniform("diffuse_color", plane_diffuse);
+         m_phong_shader.set_uniform("modelview_projection_matrix", plane_mvp_matrix, true);
+         m_phong_shader.set_uniform("modelview_matrix", plane_mv_matrix, true);
+         m_phong_shader.set_uniform("normal_matrix", plane_n_matrix, true);
+         m_quad.draw();
+         m_phong_shader.set_uniform("diffuse_color", mesh_diffuse, true);
+         m_phong_shader.set_uniform("specular_color", mesh_specular, true);
+         m_phong_shader.set_uniform("modelview_projection_matrix", mesh_mvp_matrix, true);
+         m_phong_shader.set_uniform("modelview_matrix", mesh_mv_matrix, true);
+         m_phong_shader.set_uniform("normal_matrix", mesh_n_matrix, true);
+         m_mesh->draw();
+         m_shadowMap->unbind();
 
         // All other shaders should overwrite the framebuffer color, not add to it...
         glDisable(GL_BLEND);
