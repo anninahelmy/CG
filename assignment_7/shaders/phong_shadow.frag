@@ -46,8 +46,8 @@ void main()
     ***/
 
     vec3 light = -light_position + v2f_ec_vertex; //fragment to light
-    vec3 normal_light = normalize(light);
-    vec3 normal_view = -normalize(v2f_ec_vertex);
+    vec3 normal_light = normalize(-light);
+    vec3 normal_view = normalize(-v2f_ec_vertex);
 
     /**why we use texture for distance: (learnopengl.com) What if we were to render the scene from the light's perspective and
     *store the resulting depth values in a texture? This way, we can sample the closest depth values as seen from

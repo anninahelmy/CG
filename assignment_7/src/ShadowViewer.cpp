@@ -192,21 +192,21 @@ void ShadowViewer::draw(const mat4 &view_matrix, const mat4 &projection_matrix) 
          * You'll need to pass in the light position ***in eye coordinates** as
          * well as the proper material and transformation matrices.
          **/
-         m_phong_shader.set_uniform("light_position",vec3(view_matrix*m_light[li].position()));
-         m_phong_shader.set_uniform("light_color", m_light[li].color);
-         m_phong_shader.set_uniform("specular_color", plane_specular);
-         m_phong_shader.set_uniform("diffuse_color", plane_diffuse);
-         m_phong_shader.set_uniform("modelview_projection_matrix", plane_mvp_matrix, true);
-         m_phong_shader.set_uniform("modelview_matrix", plane_mv_matrix, true);
-         m_phong_shader.set_uniform("normal_matrix", plane_n_matrix, true);
-         m_quad.draw();
-         m_phong_shader.set_uniform("diffuse_color", mesh_diffuse, true);
-         m_phong_shader.set_uniform("specular_color", mesh_specular, true);
-         m_phong_shader.set_uniform("modelview_projection_matrix", mesh_mvp_matrix, true);
-         m_phong_shader.set_uniform("modelview_matrix", mesh_mv_matrix, true);
-         m_phong_shader.set_uniform("normal_matrix", mesh_n_matrix, true);
-         m_mesh->draw();
-         m_shadowMap->unbind();
+        m_phong_shader.set_uniform("light_position",vec3(view_matrix*m_light[li].position()));
+        m_phong_shader.set_uniform("light_color", m_light[li].color);
+        m_phong_shader.set_uniform("specular_color", plane_specular);
+        m_phong_shader.set_uniform("diffuse_color", plane_diffuse);
+        m_phong_shader.set_uniform("modelview_projection_matrix", plane_mvp_matrix, true);
+        m_phong_shader.set_uniform("modelview_matrix", plane_mv_matrix, true);
+        m_phong_shader.set_uniform("normal_matrix", plane_n_matrix, true);
+        m_quad.draw();
+        m_phong_shader.set_uniform("diffuse_color", mesh_diffuse, true);
+        m_phong_shader.set_uniform("specular_color", mesh_specular, true);
+        m_phong_shader.set_uniform("modelview_projection_matrix", mesh_mvp_matrix, true);
+        m_phong_shader.set_uniform("modelview_matrix", mesh_mv_matrix, true);
+        m_phong_shader.set_uniform("normal_matrix", mesh_n_matrix, true);
+        m_mesh->draw();
+        m_shadowMap->unbind();
 
         // All other shaders should overwrite the framebuffer color, not add to it...
         glDisable(GL_BLEND);
