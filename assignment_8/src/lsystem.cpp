@@ -58,6 +58,11 @@ std::vector<Segment> LindenmayerSystem::draw(std::string const& symbols) {
     */
 
     //============================================================
+
+
+
+
+
     return lines;
 }
 
