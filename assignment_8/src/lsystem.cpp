@@ -14,12 +14,14 @@ std::string LindenmayerSystemDeterministic::expandSymbol(unsigned char const& sy
             http://en.cppreference.com/w/cpp/container/unordered_map/find
     */
 
-    auto search = rules.find(sym)
+
+    auto search = rules.find(sym);
     if (search != rules.end()) {
         return search->second;
     } else {
         return {char(sym)}; // this constructs string from char
     }
+    
 }
 
 std::string LindenmayerSystem::expandOnce(std::string const& symbol_sequence) {
@@ -29,10 +31,12 @@ std::string LindenmayerSystem::expandOnce(std::string const& symbol_sequence) {
         Use the expandSymbol method
     */
 
+
     std::string expanded_seq;
     for(int i = 0; i<symbol_sequence.length(); i++) {
         expanded_seq += expandSymbol(symbol_sequence.at(i));
     }
+
     return expanded_seq;
 
 }
@@ -73,44 +77,45 @@ std::vector<Segment> LindenmayerSystem::draw(std::string const& symbols) {
     */
 
     //============================================================
-
     vec2 current_position = vec2(0, 0);
     vec2 new_position = vec2(0, 0);
     float angle = 0;
     std::stack<vec2> saved_positions; //initialise a stack with all "stored" positions
+    std::cout << "entered function draw" << std::endl;
 
     //todo iterate over all characters in "symbols"
     for (char symbol : symbols) {
+        std::cout << "entered for loop in function draw" << std::endl;
+
         //switch case for characters
         switch (symbol) {
-        case '+':
-            //+ rotate counter clockwise
-            angle = angle + rotation_angle_deg;
-            break;
-        case '-':
-            //- roatate clockwise
-            angle = angle - rotation_angle_deg;
-            break;
-        case '[':
-            //[ add position to stack
-            saved_positions.push(current_position);
-            break;
-        case ']':
-            //] get last position on stack and remove it from stack
-            current_position = saved_positions.top();
-            saved_position.pop();
-            break;
-        case 'F':
-            //F draw line forward
-            new_position = vec2(current_position.x + cos(angle), (current_position.y + sin(angle)));
-            lines.push_back({ current_position, new_position });
-            current_position = new_position;
-            break;
-        default:
-            cout << "Invalid character" << endl;
+            case '+':
+                //+ rotate counter clockwise
+                angle = angle + rotation_angle_deg;
+                break;
+            case '-':
+                //- roatate clockwise
+                angle = angle - rotation_angle_deg;
+                break;
+            case '[':
+                //[ add position to stack
+                saved_positions.push(current_position);
+                break;
+            case ']':
+                //] get last position on stack and remove it from stack
+                current_position = saved_positions.top();
+                saved_positions.pop();
+                break;
+            case 'F':
+                //F draw line forward
+                new_position = vec2(current_position.x + cos(angle), (current_position.y + sin(angle)));
+                lines.push_back({ current_position, new_position });
+                current_position = new_position;
+                break;
+            default:
+                std::cout << "Invalid character" << std::endl;
         }
     }
-
     return lines;
 }
 
