@@ -15,7 +15,7 @@ std::string LindenmayerSystemDeterministic::expandSymbol(unsigned char const& sy
     */
 
 
-    auto search = rules.find(sym)
+    auto search = rules.find(sym);
         if (search != rules.end()) {
             return search->second;
         }
@@ -80,9 +80,12 @@ std::vector<Segment> LindenmayerSystem::draw(std::string const& symbols) {
     vec2 new_position = vec2(0, 0);
     float angle = 0;
     std::stack<vec2> saved_positions; //initialise a stack with all "stored" positions
+    cout << "entered function draw" << endl;
 
     //todo iterate over all characters in "symbols"
     for (char symbol : symbols) {
+        cout << "entered for loop in function draw" << endl;
+
         //switch case for characters
         switch (symbol) {
         case '+':
@@ -124,8 +127,15 @@ std::string LindenmayerSystemStochastic::expandSymbol(unsigned char const& sym) 
 
         Use dice.roll() to get a random number between 0 and 1
     */
-    
-    return {char(sym)};
+    std::string expanded_seq;
+    double random = dice.roll()*2;
+    if (random < 1) {
+        expanded_seq = "F+F";
+    }
+    else {
+        expanded_seq = "F-F";
+    }
+    return {expanded_seq};
 }
 
 void LindenmayerSystemDeterministic::addRuleDeterministic(unsigned char sym, std::string const& expansion) {
