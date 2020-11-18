@@ -14,8 +14,12 @@ std::string LindenmayerSystemDeterministic::expandSymbol(unsigned char const& sy
             http://en.cppreference.com/w/cpp/container/unordered_map/find
     */
 
-    return {char(sym)}; // this constructs string from char
-    
+    auto search = rules.find(sym)
+    if (search != rules.end()) {
+        return search->second;
+    } else {
+        return {char(sym)}; // this constructs string from char
+    }
 }
 
 std::string LindenmayerSystem::expandOnce(std::string const& symbol_sequence) {
@@ -24,8 +28,12 @@ std::string LindenmayerSystem::expandOnce(std::string const& symbol_sequence) {
         Perform one iteration of grammar expansion on `symbol_sequence`.
         Use the expandSymbol method
     */
-    
-    return "";
+
+    std::string expanded_seq;
+    for(int i = 0; i<symbol_sequence.length(); i++) {
+        expanded_seq += expandSymbol(symbol_sequence.at(i));
+    }
+    return expanded_seq;
 
 }
 
@@ -35,7 +43,14 @@ std::string LindenmayerSystem::expand(std::string const& initial, uint32_t num_i
         Perform `num_iters` iterations of grammar expansion (use expandOnce)
     */
 
-    return "";
+    std:: string seq = initial;
+    int i = 0;
+
+    while(i != num_iters){
+        seq = expandOnce(seq);
+        i++;
+    }
+    return seq;
 }
 
 std::vector<Segment> LindenmayerSystem::draw(std::string const& symbols) {
