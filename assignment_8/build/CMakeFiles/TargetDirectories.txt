@@ -1,7 +1,0 @@
-C:/Users/ronja/Desktop/assignment_8/build/CMakeFiles/lsys.dir
-C:/Users/ronja/Desktop/assignment_8/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/ronja/Desktop/assignment_8/build/CMakeFiles/ZERO_CHECK.dir
-C:/Users/ronja/Desktop/assignment_8/build/lib/glew/CMakeFiles/glew.dir
-C:/Users/ronja/Desktop/assignment_8/build/lib/glfw/CMakeFiles/ALL_BUILD.dir
-C:/Users/ronja/Desktop/assignment_8/build/lib/glfw/src/CMakeFiles/glfw.dir
-C:/Users/ronja/Desktop/assignment_8/build/lib/lodePNG/CMakeFiles/lodePNG.dir

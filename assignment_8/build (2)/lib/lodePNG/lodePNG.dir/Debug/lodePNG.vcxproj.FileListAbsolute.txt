@@ -1,2 +1,0 @@
-C:\Users\ronja\Desktop\assignment_8\build\Debug\lodePNG.pdb
-C:\Users\ronja\Desktop\assignment_8\build\lib\lodePNG\lodePNG.dir\Debug\lodePNG.pdb

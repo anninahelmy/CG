@@ -1,2 +1,0 @@
-C:\Users\ronja\Desktop\assignment_8\build\Debug\glew.pdb
-C:\Users\ronja\Desktop\assignment_8\build\lib\glew\glew.dir\Debug\glew.pdb
