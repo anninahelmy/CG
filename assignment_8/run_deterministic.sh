@@ -12,6 +12,7 @@
 ./build/lsys data_in/plant_01.json data_out/plant_01
 ./build/lsys data_in/plant_02.json data_out/plant_02
 ./build/lsys data_in/plant_03.json data_out/plant_03
+./build
 ./build/lsys data_in/plant_04.json data_out/plant_04
 ./build/lsys data_in/plant_05.json data_out/plant_05
 ./build/lsys data_in/plant_06.json data_out/plant_06

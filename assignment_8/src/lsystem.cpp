@@ -57,6 +57,8 @@ std::string LindenmayerSystem::expand(std::string const& initial, uint32_t num_i
     return seq;
 }
 
+
+
 std::vector<Segment> LindenmayerSystem::draw(std::string const& symbols) {
     std::vector<Segment> lines; // this is already initialized as empty vector
     /*============================================================
@@ -80,7 +82,9 @@ std::vector<Segment> LindenmayerSystem::draw(std::string const& symbols) {
     vec2 current_position = vec2(0, 0);
     vec2 new_position = vec2(0, 0);
     float angle = 0;
+    double pi = 3.14159265359;
     std::stack<vec2> saved_positions; //initialise a stack with all "stored" positions
+    std::stack<float> saved_angles; //initialise a stack with all "stored" angles
     std::cout << "entered function draw" << std::endl;
 
     //todo iterate over all characters in "symbols"
@@ -100,15 +104,18 @@ std::vector<Segment> LindenmayerSystem::draw(std::string const& symbols) {
             case '[':
                 //[ add position to stack
                 saved_positions.push(current_position);
+                saved_angles.push(angle);
                 break;
             case ']':
                 //] get last position on stack and remove it from stack
                 current_position = saved_positions.top();
                 saved_positions.pop();
+                angle = saved_angles.top();
+                saved_angles.pop();
                 break;
             case 'F':
                 //F draw line forward
-                new_position = vec2(current_position.x + cos(angle), (current_position.y + sin(angle)));
+                new_position = vec2(current_position.x + cos(angle * (pi/180)), (current_position.y + sin(angle * (pi/180))));
                 lines.push_back({ current_position, new_position });
                 current_position = new_position;
                 break;
@@ -119,6 +126,9 @@ std::vector<Segment> LindenmayerSystem::draw(std::string const& symbols) {
     return lines;
 }
 
+
+
+
 std::string LindenmayerSystemStochastic::expandSymbol(unsigned char const& sym) {
     /*============================================================
         TODO 4
@@ -127,8 +137,32 @@ std::string LindenmayerSystemStochastic::expandSymbol(unsigned char const& sym) 
 
         Use dice.roll() to get a random number between 0 and 1
     */
-    
-    return {char(sym)};
+
+    auto search = rules.find(sym);
+    if (search != rules.end()) {
+
+
+        auto const& random_rule = search->second;
+        double rolled_dice = dice.roll();
+
+        for (StochasticRule const& rule : random_rule) {
+            if (rolled_dice < rule.probability) {
+                return rule.expansion;
+            }
+            else {
+                rolled_dice -= rule.probability;
+            }
+
+        }
+        return { char(sym) };
+    } else {
+        return {char(sym)}; // this constructs string from char
+    }
+
+
+
+
+
 }
 
 void LindenmayerSystemDeterministic::addRuleDeterministic(unsigned char sym, std::string const& expansion) {
