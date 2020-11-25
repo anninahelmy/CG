@@ -171,4 +171,18 @@ void Mesh::compute_normals()
     }
 
     // \todo Paste your assignment 3 vertex normal computation solution here.
+    for (Triangle& t: triangles_){
+        //find angles/weight for every vertex in triangle
+        double w0, w1, w2;
+        angleWeights(vertices_[t.i0].position, vertices_[t.i1].position, vertices_[t.i2].position, w0, w1, w2);
+        // add for every vertex of the triangle the weighted normal of the triangle to the vertex normal
+        vertices_[t.i0].normal += t.normal*w0;
+        vertices_[t.i1].normal += t.normal*w1;
+        vertices_[t.i2].normal += t.normal*w2;
+    }
+
+    // iterate over all vertex normals and normalize them
+    for(Vertex& v: vertices_){
+        v.normal = normalize(v.normal);
+    }
 }

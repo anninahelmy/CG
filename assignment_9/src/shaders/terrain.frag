@@ -29,24 +29,42 @@ void main()
 	const vec3 ambient = 0.2 * sunlight; // Ambient light intensity
 	float height = v2f_height;
 
-    /**
-	 * \todo Compute the terrain color ("material") and shininess based on the height as
-	 * described in the handout.
-	 *
-	 * Water:
-	 *		color = terrain_color_water
-	 *		shininess = 8.0
-	 * Ground:
-	 *		color = interpolate between terrain_color_grass and terrain_color_mountain, weight is (height - terrain_water_level)*2
-	 * 		shininess = 0.5
-     */
-	vec3 material = terrain_color_grass;
-	float shininess = 0.5;
+	vec3 material;
+	float shininess;
+	if(height>terrain_water_level){
+		material = mix(terrain_color_grass, terrain_color_mountain, (height-terrain_water_level)*2);
+		shininess = 0.5;
+	}
+	else{
+		material = terrain_color_water;
+		shininess =8.0;
+	}
 
     /**
 	 * \todo Paste your Phong fragment shading code from assignment 6/7 here,
 	 * altering it to use the terrain color as the ambient, diffuse, and
 	 * specular materials.
      */
-	f_color = vec4(material, 1.0);
+	vec3 color = vec3(0.0f);
+	// Orient the normal so it always points opposite the camera rays:
+	vec3 N = -sign(dot(v2f_normal, v2f_ec_vertex)) *
+	normalize(v2f_normal);
+
+	vec3 light = -light_position + v2f_ec_vertex; //fragment to light
+	vec3 normal_light = normalize(-light);
+	vec3 normal_view = normalize(-v2f_ec_vertex);
+
+	color += ambient * material;
+
+		if (dot(N, normal_light) > 0) {
+			color += material * sunlight * dot(N, normal_light);
+		}
+		//specular
+		float r = dot(normal_view, reflect(normal_light, N));
+		if (dot(normal_view, normal_light) > 0 && r > 0) {
+			color += sunlight * material * pow(dot(reflect(normal_light, N), normal_view), shininess);
+		}
+
+	// append the required alpha value
+	f_color = vec4(color, 1.0);
 }

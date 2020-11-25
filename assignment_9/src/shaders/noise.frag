@@ -55,13 +55,13 @@ float perlin_noise_1d(float x) {
 	/*
 	// Note Gradients in the table are 2d, so in the 1D case we use grad.x
 	*/
-	/** \todo
+	/**
 	 * Evaluate the 1D Perlin noise function at "x" as described
 	 * in the handout. You will determine the two grid points
 	 * surrounding x, look up their gradients, evaluate the the
 	 * linear functions these gradients describe, and interpolate these
 	 * values using the smooth interolation polygnomial blending_weight_poly.
-	 * Note: gradients in the gradient lookup table are 2D, 
+	 * Note: gradients in the gradient lookup table are 2D,
 	 */
 
 	//step 1
@@ -139,7 +139,7 @@ vec3 plots(vec2 point) {
 // 2D Perlin noise evaluation
 
 float perlin_noise(vec2 point) {
-	/** \todo
+	/**
 	* Implement 2D perlin noise as described in the handout.
 	* You may find a glsl `for` loop useful here, but it's not necessary.
 	**/
@@ -221,7 +221,7 @@ const vec3 terrain_color_grass = vec3(0.43, 0.53, 0.23);
 const vec3 terrain_color_mountain = vec3(0.8, 0.7, 0.7);
 
 vec3 tex_map(vec2 point) {
-	/** \todo
+	/**
 	 * Implement your map texture evaluation routine as described in the
 	 * handout. You will need to use your perlin_fbm routine and the
 	 * terrain color constants described above.

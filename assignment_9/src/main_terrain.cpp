@@ -54,26 +54,28 @@ std::shared_ptr<Mesh> build_terrain_mesh(Array2D<float> const& height_map) {
 		for(int gx = 0; gx < grid_size.first; gx++) {
 			int const idx = xy_to_v_index(gx, gy);
 
-			/** \todo
-			 * Generate the displaced terrain vertex corresponding to integer
-			 * grid location (gx, gy). The height (Z coordinate) of this vertex
-			 * is determined by height_map, however if the point falls below
-			 * WATER_LEVEL, it should be clamped back to WATER_LEVEL.
-			 * The XY coordinates are calculated so that the full grid covers
-			 * the square [-0.5, 0.5]^2 in the XY plane.
-			 */
-			vertices.at(idx) = vec3(0, 0, 0);
+			 float z = height_map(gx,gy);
+			 if(z < WATER_LEVEL){
+			     z = WATER_LEVEL; //however if the point falls below WATER_LEVEL, it should be clamped back to WATER_LEVEL.
+			 }
+
+            vec2 world = vec2(float(gx)/grid_size.first - 0.5 , float(gy)/grid_size.second - 0.5); //generate whole world coord.
+			vertices.at(idx) = vec3(world.x, world.y, z);
 		}
 	}
-
 	// Second, connect the grid vertices with triangles to triangulate the terrain.
 	for(int gy = 0; gy < grid_size.second-1; gy++) {
 		for(int gx = 0; gx < grid_size.first-1; gx++) {
-			/** \todo
-			 * Triangulate the grid cell whose lower lefthand corner is grid index (gx, gy)
-			 * (You will need to create two triangles to fill the quad.)
-			 **/
-		}
+
+            int bottom_left = xy_to_v_index(gx,gy);
+            int top_left = xy_to_v_index(gx,gy+1);
+            int bottom_right = xy_to_v_index(gx+1,gy);
+            int top_right = xy_to_v_index(gx+1,gy+1);
+
+            faces.emplace_back(bottom_left, bottom_right, top_left);
+            faces.emplace_back(bottom_right, top_right, top_left);
+
+        }
 	}
 
 	return std::make_shared<Mesh>(vertices, faces);
