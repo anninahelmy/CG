@@ -143,7 +143,38 @@ float perlin_noise(vec2 point) {
 	* Implement 2D perlin noise as described in the handout.
 	* You may find a glsl `for` loop useful here, but it's not necessary.
 	**/
-	return 0.0f;
+
+	//step 1
+	vec2 cell_corner_bottom_left = floor(point);
+	vec2 cell_corner_bottom_right = cell_corner_bottom_left+vec2(1,0);
+	vec2 cell_corner_top_left = cell_corner_bottom_left+vec2(0,1);
+	vec2 cell_coroner_top_right = cell_corner_top_left+vec2(1,1);
+
+	//step 2
+	int hash_bottom_left = hash_func(cell_corner_bottom_left);
+	int hash_bottom_right = hash_func(cell_corner_bottom_right);
+	int hash_top_left = hash_func(cell_corner_top_left);
+	int hash_top_right = hash_func(cell_coroner_top_right);
+	//gi = gradients[h(ci) mod 12].
+	//// use gradients[hash % NUM_GRADIENTS] to access the gradient corresponding
+	//// to a hashed grid point location
+	vec2 gradient_bottom_left = gradients[hash_bottom_left % NUM_GRADIENTS];
+	vec2 gradient_bottom_right = gradients[hash_bottom_right % NUM_GRADIENTS];
+	vec2 gradient_top_left = gradients[hash_top_left % NUM_GRADIENTS];
+	vec2 gradient_top_right = gradients[hash_top_right % NUM_GRADIENTS];
+
+	//step 3: calculate contributions: φi(p)=gi ·(p−ci)
+	float contribution_bottom_left = dot(gradient_bottom_left,point-cell_corner_bottom_left);
+	float contribution_bottom_right = dot(gradient_bottom_right,point-cell_corner_bottom_right);
+	float contribution_top_left = dot(gradient_top_left,point-cell_corner_top_left);
+	float contribution_top_right = dot(gradient_top_right,point-cell_coroner_top_right);
+	vec2 point_relative = fract(point);
+
+	return mix(
+		mix(contribution_bottom_left, contribution_bottom_right, blending_weight_poly(point_relative.x)),
+		mix(contribution_top_left, contribution_top_right, blending_weight_poly(point_relative.y)),
+		blending_weight_poly(point_relative.y)
+	);
 }
 
 // ==============================================================
