@@ -139,7 +139,6 @@ vec3 plots(vec2 point) {
 // 2D Perlin noise evaluation
 
 float perlin_noise(vec2 point) {
-	// @todo find error ?? ?
 	/**
 	* Implement 2D perlin noise as described in the handout.
 	* You may find a glsl `for` loop useful here, but it's not necessary.
