@@ -139,6 +139,7 @@ vec3 plots(vec2 point) {
 // 2D Perlin noise evaluation
 
 float perlin_noise(vec2 point) {
+	// @todo find error ?? ?
 	/**
 	* Implement 2D perlin noise as described in the handout.
 	* You may find a glsl `for` loop useful here, but it's not necessary.
@@ -148,13 +149,13 @@ float perlin_noise(vec2 point) {
 	vec2 cell_corner_bottom_left = floor(point);
 	vec2 cell_corner_bottom_right = cell_corner_bottom_left+vec2(1,0);
 	vec2 cell_corner_top_left = cell_corner_bottom_left+vec2(0,1);
-	vec2 cell_coroner_top_right = cell_corner_top_left+vec2(1,1);
+	vec2 cell_corner_top_right = cell_corner_top_left+vec2(1,1);
 
 	//step 2
 	int hash_bottom_left = hash_func(cell_corner_bottom_left);
 	int hash_bottom_right = hash_func(cell_corner_bottom_right);
 	int hash_top_left = hash_func(cell_corner_top_left);
-	int hash_top_right = hash_func(cell_coroner_top_right);
+	int hash_top_right = hash_func(cell_corner_top_right);
 	//gi = gradients[h(ci) mod 12].
 	//// use gradients[hash % NUM_GRADIENTS] to access the gradient corresponding
 	//// to a hashed grid point location
@@ -164,11 +165,12 @@ float perlin_noise(vec2 point) {
 	vec2 gradient_top_right = gradients[hash_top_right % NUM_GRADIENTS];
 
 	//step 3: calculate contributions: φi(p)=gi ·(p−ci)
-	float contribution_bottom_left = dot(gradient_bottom_left,point-cell_corner_bottom_left);
-	float contribution_bottom_right = dot(gradient_bottom_right,point-cell_corner_bottom_right);
-	float contribution_top_left = dot(gradient_top_left,point-cell_corner_top_left);
-	float contribution_top_right = dot(gradient_top_right,point-cell_coroner_top_right);
+	float contribution_bottom_left = dot(point-cell_corner_bottom_left,gradient_bottom_left);
+	float contribution_bottom_right = dot(point-cell_corner_bottom_right,gradient_bottom_right);
+	float contribution_top_left = dot(point-cell_corner_top_left, gradient_top_left);
+	float contribution_top_right = dot(point-cell_corner_top_right, gradient_top_right);
 	//need realtive point see assignment(x and y in the slide’s formulas mean p’s relative position inside the cell)
+
 	vec2 point_relative = fract(point); //fract(x) returns the fractional part of x. This is calculated as x - floor(x).
 
 	return mix(
