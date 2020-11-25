@@ -168,7 +168,8 @@ float perlin_noise(vec2 point) {
 	float contribution_bottom_right = dot(gradient_bottom_right,point-cell_corner_bottom_right);
 	float contribution_top_left = dot(gradient_top_left,point-cell_corner_top_left);
 	float contribution_top_right = dot(gradient_top_right,point-cell_coroner_top_right);
-	vec2 point_relative = fract(point);
+	//need realtive point see assignment(x and y in the slide’s formulas mean p’s relative position inside the cell)
+	vec2 point_relative = fract(point); //fract(x) returns the fractional part of x. This is calculated as x - floor(x).
 
 	return mix(
 		mix(contribution_bottom_left, contribution_bottom_right, blending_weight_poly(point_relative.x)),
@@ -181,24 +182,34 @@ float perlin_noise(vec2 point) {
 // 2D Fractional Brownian Motion
 
 float perlin_fbm(vec2 point) {
-	/** \todo
-	 * Implement 2D fBm as described in the handout. Like in the 1D case, you
-	 * should use the constants num_octaves, freq_multiplier, and
-	 * ampl_multiplier. 
-	 */
-	return 0.0f;
+	float amplitude = 1.;
+	float frequency = 1.;
+	//with the help of [[https://thebookofshaders.com/13/]]
+	//exactly the same as in 1D…
+	float y = 0;
+	for (int i=0; i < num_octaves; i++){
+		y += amplitude*perlin_noise(frequency*point);
+		amplitude*= ampl_multiplier; //increment
+		frequency *= freq_multiplier; //increment
+	}
+	return y;
 }
 
 // ==============================================================
 // 2D turbulence
 
 float turbulence(vec2 point) {
-
-	/** \todo
-	 * Implement the 2D turbulence function as described in the handout.
-	 * Again, you should use num_octaves, freq_multiplier, and ampl_multiplier.
-	 */
-	return 0.0f;
+	float amplitude = 1.;
+	float frequency = 1.;
+	//with the help of [[https://thebookofshaders.com/13/]]
+	//exactly the same as in 1D…
+	float y = 0;
+	for (int i=0; i < num_octaves; i++){
+		y += amplitude*abs(perlin_noise(frequency*point)); //just add absolute value for turbulence
+		amplitude*= ampl_multiplier; //increment
+		frequency *= freq_multiplier; //increment
+	}
+	return y;
 }
 
 // ==============================================================
