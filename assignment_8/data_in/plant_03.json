@@ -3,7 +3,7 @@
 	"stochastic": false,
 	"initial": "F",
 	"angle_deg": 22.5,
-	"num_iters": 4,
+	"num_iters": 2,
 	"rules": {
 		"F": "FF-[-F+F+F]+[+F-F-F]"
 	}
