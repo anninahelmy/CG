@@ -86,15 +86,16 @@ float perlin_noise_1d(float x) {
 }
 
 float perlin_fbm_1d(float x) {
-	/** \todo
-	 * Implement 1D fractional Brownian motion (fBm) as described in the handout.
-	 * You should add together num_octaves octaves of Perlin noise, starting at
-	 * octave 0. You also should use the frequency and amplitude multipliers
-	 * freq_multiplier and ampl_multiplier defined above to rescale each
-	 * successive octave.
-	 * Note: the GLSL `for` loop may be useful.
-	 */
-	return 0.0f;
+	float amplitude = 1.;
+	float frequency = 1.;
+	//with the help of [[https://thebookofshaders.com/13/]]
+	float y = 0;
+	for (int i=0; i < num_octaves; i++){
+		y += amplitude*perlin_noise_1d(frequency*x);
+		amplitude*= ampl_multiplier; //increment
+		frequency *= freq_multiplier; //increment
+	}
+	return y;
 }
 
 // ----- plotting -----
