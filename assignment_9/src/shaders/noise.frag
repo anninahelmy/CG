@@ -139,6 +139,7 @@ vec3 plots(vec2 point) {
 // 2D Perlin noise evaluation
 
 float perlin_noise(vec2 point) {
+	// @todo find error ?? ?
 	/**
 	* Implement 2D perlin noise as described in the handout.
 	* You may find a glsl `for` loop useful here, but it's not necessary.
@@ -165,6 +166,7 @@ float perlin_noise(vec2 point) {
 	float contribution_01 = dot(point-corner_01,gradient_01);
 	float contribution_11 = dot(point-corner_11,gradient_11);
 	//need realtive point see assignment(x and y in the slide’s formulas mean p’s relative position inside the cell)
+
 	vec2 point_relative = fract(point); //fract(x) returns the fractional part of x. This is calculated as x - floor(x).
 
 	float st = mix(contribution_00, contribution_10, blending_weight_poly(point_relative.x));
